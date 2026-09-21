@@ -1,0 +1,5 @@
+{
+  "extends": "../tsconfig",
+  "compilerOptions": { "rootDir": "..", "types": ["react"] },
+  "include": ["src", "index.js"]
+}

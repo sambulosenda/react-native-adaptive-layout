@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build:ios": {
+      "env": ["RCT_NEW_ARCH_ENABLED"],
+      "inputs": [
+        "package.json",
+        "*.podspec",
+        "ios",
+        "!ios/build",
+        "src/native",
+        "example/package.json",
+        "example/app.json",
+        "example/ios",
+        "!example/ios/build",
+        "!example/ios/Pods"
+      ],
+      "outputs": []
+    }
+  }
+}

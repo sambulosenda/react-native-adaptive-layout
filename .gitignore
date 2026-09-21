@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# Build output
+lib/
+coverage/
+.turbo/
+
+# Native
+ios/build/
+example/ios/
+example/android/
+example/.expo/
+*.xcworkspace
+*.xcuserstate
+xcuserdata/
+Pods/
+DerivedData/
+*.hmap
+*.ipa
+
+# Tooling
+.DS_Store
+*.log
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json

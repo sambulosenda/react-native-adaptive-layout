@@ -1,0 +1,26 @@
+{
+  "name": "react-native-foldable-example",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start --dev-client",
+    "ios": "expo run:ios",
+    "prebuild": "expo prebuild --platform ios --clean",
+    "build:ios": "xcodebuild ONLY_ACTIVE_ARCH=YES -workspace ios/FoldableExample.xcworkspace -UseNewBuildSystem=YES -scheme FoldableExample -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -quiet"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "~57.0.16",
+    "expo": "~57.0.24",
+    "expo-build-properties": "~57.0.21",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-foldable": "workspace:*",
+    "react-native-safe-area-context": "~5.7.0"
+  },
+  "devDependencies": {
+    "react-native-builder-bob": "^0.43.1",
+    "react-native-monorepo-config": "^0.4.0"
+  }
+}

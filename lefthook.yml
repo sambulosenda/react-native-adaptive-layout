@@ -1,0 +1,12 @@
+pre-commit:
+  parallel: true
+  commands:
+    biome:
+      glob: '*.{js,jsx,ts,tsx}'
+      run: yarn biome check --write --no-errors-on-unmatched {staged_files} && git add {staged_files}
+    typecheck:
+      run: yarn typecheck
+commit-msg:
+  commands:
+    commitlint:
+      run: yarn commitlint --edit {1}

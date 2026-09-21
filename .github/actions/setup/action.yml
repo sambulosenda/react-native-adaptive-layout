@@ -1,0 +1,19 @@
+name: Setup
+description: Install Node, enable Corepack and install dependencies
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: .nvmrc
+    - run: corepack enable
+      shell: bash
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/.yarn/berry/cache
+          .yarn/install-state.gz
+        key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+        restore-keys: yarn-${{ runner.os }}-
+    - run: yarn install --immutable
+      shell: bash

@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "Foldable Example",
+    "slug": "react-native-foldable-example",
+    "version": "1.0.0",
+    "orientation": "default",
+    "userInterfaceStyle": "dark",
+    "scheme": "foldable-example",
+    "platforms": ["ios"],
+    "ios": {
+      "bundleIdentifier": "dev.foldable.example",
+      "supportsTablet": true
+    },
+    "plugins": [
+      ["expo-build-properties", { "ios": { "enableSceneSupport": true } }]
+    ]
+  }
+}

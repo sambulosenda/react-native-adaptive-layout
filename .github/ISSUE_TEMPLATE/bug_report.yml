@@ -1,0 +1,28 @@
+name: Bug report
+description: Something does not work as documented
+labels: [bug, needs-triage]
+body:
+  - type: input
+    id: version
+    attributes: { label: react-native-foldable version }
+    validations: { required: true }
+  - type: input
+    id: rn
+    attributes: { label: React Native / Expo version }
+    validations: { required: true }
+  - type: input
+    id: device
+    attributes: { label: Device or simulator and OS version, placeholder: iPhone Duo, iOS 27.1 }
+    validations: { required: true }
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: A repo or snippet using FoldableLayout that shows the problem.
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: Expected behaviour }
+  - type: textarea
+    id: actual
+    attributes: { label: Actual behaviour (include logs) }

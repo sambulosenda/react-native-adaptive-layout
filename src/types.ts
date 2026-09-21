@@ -1,0 +1,48 @@
+import type { ReactNode } from 'react';
+import type { ViewProps } from 'react-native';
+
+/** How the two panes are arranged when the system decides to show both. */
+export type LayoutMode = 'split' | 'overlay';
+
+/** Which axes the system may use to arrange the panes. */
+export type LayoutAxis = 'any' | 'horizontal' | 'vertical';
+
+/** Physical state of the device hinge as reported by the OS. */
+export type FoldPosture = 'unknown' | 'closed' | 'partiallyOpen' | 'fullyOpen';
+
+/**
+ * A snapshot of the hinge. When no hinge is present (`available === false`) the
+ * angles are `null` and the posture is `'unknown'`; nothing is ever inferred.
+ */
+export interface HingeState {
+  readonly available: boolean;
+  /** Hinge angle in radians, or `null` when unavailable. */
+  readonly angleRadians: number | null;
+  /** Hinge angle in degrees, derived from `angleRadians` for convenience. */
+  readonly angleDegrees: number | null;
+  readonly posture: FoldPosture;
+}
+
+export type HingeListener = (hinge: HingeState) => void;
+
+export interface FoldableLayoutProps extends ViewProps {
+  /**
+   * Exactly one `FoldableLayout.Primary` and one `FoldableLayout.Secondary`,
+   * in any order. Other children are ignored with a development warning.
+   */
+  children?: ReactNode;
+  /** @default 'split' */
+  mode?: LayoutMode;
+  /** @default 'any' */
+  axis?: LayoutAxis;
+  /**
+   * Whether hinge updates are delivered to `useHinge` inside this layout.
+   * Adaptive layout is unaffected by this flag.
+   * @default true
+   */
+  trackHinge?: boolean;
+}
+
+export interface SlotProps {
+  children?: ReactNode;
+}

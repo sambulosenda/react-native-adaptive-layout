@@ -1,0 +1,116 @@
+#import "RNFoldableLayoutView.h"
+#import "RNFoldablePaneView.h"
+#import "RNFoldable-Swift.h"
+
+#import <react/renderer/components/RNFoldableSpec/ComponentDescriptors.h>
+#import <react/renderer/components/RNFoldableSpec/EventEmitters.h>
+#import <react/renderer/components/RNFoldableSpec/Props.h>
+
+using namespace facebook::react;
+
+static NSString *RNFoldableModeName(RNFoldableLayoutMode mode)
+{
+  return mode == RNFoldableLayoutMode::Overlay ? @"overlay" : @"split";
+}
+
+static NSString *RNFoldableAxisName(RNFoldableLayoutAxis axis)
+{
+  switch (axis) {
+    case RNFoldableLayoutAxis::Horizontal: return @"horizontal";
+    case RNFoldableLayoutAxis::Vertical: return @"vertical";
+    case RNFoldableLayoutAxis::Any: return @"any";
+  }
+  return @"any";
+}
+
+@interface RNFoldableLayoutView () <RNFoldableLayoutHostDelegate>
+@end
+
+@implementation RNFoldableLayoutView {
+  RNFoldableLayoutHost *_host;
+  NSMutableArray<UIView *> *_panes;
+}
+
++ (ComponentDescriptorProvider)componentDescriptorProvider
+{
+  return concreteComponentDescriptorProvider<RNFoldableLayoutComponentDescriptor>();
+}
+
+// The host owns a UIHostingController; recycling would leak SwiftUI state
+// between unrelated layouts.
++ (BOOL)shouldBeRecycled
+{
+  return NO;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+  if (self = [super initWithFrame:frame]) {
+    _props = std::make_shared<const RNFoldableLayoutProps>();
+    _panes = [NSMutableArray new];
+    _host = [[RNFoldableLayoutHost alloc] initWithFrame:self.bounds];
+    _host.delegate = self;
+    self.contentView = _host;
+  }
+  return self;
+}
+
+#pragma mark - Children
+
+- (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
+{
+  [_panes insertObject:childComponentView atIndex:index];
+  [self assignPanes];
+}
+
+- (void)unmountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
+{
+  [childComponentView removeFromSuperview];
+  [_panes removeObjectIdenticalTo:childComponentView];
+  [self assignPanes];
+}
+
+- (void)assignPanes
+{
+  UIView *primary = _panes.count > 0 ? _panes[0] : nil;
+  UIView *secondary = _panes.count > 1 ? _panes[1] : nil;
+  [_host setPrimary:primary secondary:secondary];
+}
+
+#pragma mark - Props
+
+- (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &)oldProps
+{
+  const auto &next = *std::static_pointer_cast<const RNFoldableLayoutProps>(props);
+  [_host applyWithMode:RNFoldableModeName(next.mode)
+                  axis:RNFoldableAxisName(next.axis)
+            trackHinge:next.trackHinge];
+  [super updateProps:props oldProps:oldProps];
+}
+
+#pragma mark - RNFoldableLayoutHostDelegate
+
+- (void)layoutHost:(RNFoldableLayoutHost *)host
+    didUpdateHingeAvailable:(BOOL)available
+                      angle:(double)angle
+                    posture:(NSString *)posture
+{
+  if (!_eventEmitter) {
+    return;
+  }
+  auto emitter = std::static_pointer_cast<const RNFoldableLayoutEventEmitter>(_eventEmitter);
+  emitter->onHingeUpdate({
+      .available = static_cast<bool>(available),
+      .angle = angle,
+      .posture = std::string(posture.UTF8String),
+  });
+}
+
+- (void)layoutHost:(RNFoldableLayoutHost *)host didPlace:(UIView *)pane frame:(CGRect)frame
+{
+  if ([pane isKindOfClass:RNFoldablePaneView.class]) {
+    [(RNFoldablePaneView *)pane applyNativeFrame:frame];
+  }
+}
+
+@end
