@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { FoldableLayout, type LayoutAxis, type LayoutMode } from 'react-native-foldable';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { Chip } from './Chip';
 import { Pane } from './Pane';
-import { SegmentedControl } from './SegmentedControl';
 import { palette, radius, space } from './theme';
 
 const MODES: readonly LayoutMode[] = ['split', 'overlay'];
@@ -16,14 +16,30 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
+      <SafeAreaView style={styles.screen}>
         <StatusBar style="dark" />
 
-        <View style={styles.titleBar}>
+        <View style={styles.header}>
           <Text style={styles.title}>Foldable Playground</Text>
-          <Text style={styles.subtitle}>
-            {mode} · {axis} axis
-          </Text>
+          <View style={styles.controls}>
+            {MODES.map((option) => (
+              <Chip
+                key={option}
+                label={option}
+                selected={option === mode}
+                onPress={() => setMode(option)}
+              />
+            ))}
+            <View style={styles.divider} />
+            {AXES.map((option) => (
+              <Chip
+                key={option}
+                label={option}
+                selected={option === axis}
+                onPress={() => setAxis(option)}
+              />
+            ))}
+          </View>
         </View>
 
         <View style={styles.stage}>
@@ -36,17 +52,6 @@ export default function App() {
             </FoldableLayout.Secondary>
           </FoldableLayout>
         </View>
-
-        <View style={styles.toolbar}>
-          <View style={styles.control}>
-            <Text style={styles.controlLabel}>Mode</Text>
-            <SegmentedControl options={MODES} value={mode} onChange={setMode} />
-          </View>
-          <View style={styles.control}>
-            <Text style={styles.controlLabel}>Axis</Text>
-            <SegmentedControl options={AXES} value={axis} onChange={setAxis} />
-          </View>
-        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -54,28 +59,23 @@ export default function App() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: palette.canvas },
-  titleBar: { paddingHorizontal: space.xl, paddingTop: space.md, paddingBottom: space.lg, gap: 2 },
+  header: {
+    paddingHorizontal: space.xl,
+    paddingTop: space.md,
+    paddingBottom: space.lg,
+    gap: space.md,
+  },
   title: { fontSize: 28, fontWeight: '800', letterSpacing: -0.8, color: palette.ink },
-  subtitle: { fontSize: 13, color: palette.inkMuted, textTransform: 'capitalize' },
+  controls: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space.sm },
+  divider: { width: 1, height: 20, backgroundColor: palette.line, marginHorizontal: space.xs },
   stage: {
     flex: 1,
     marginHorizontal: space.lg,
+    marginBottom: space.lg,
     borderRadius: radius.lg,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: palette.line,
   },
   layout: { flex: 1 },
-  toolbar: {
-    backgroundColor: palette.bar,
-    marginTop: space.lg,
-    paddingHorizontal: space.xl,
-    paddingTop: space.lg,
-    paddingBottom: space.xxl,
-    borderTopLeftRadius: radius.lg,
-    borderTopRightRadius: radius.lg,
-    gap: space.md,
-  },
-  control: { gap: space.sm },
-  controlLabel: { color: palette.barMuted, fontSize: 11, fontWeight: '700', letterSpacing: 1 },
 });
