@@ -1,4 +1,4 @@
-import { codegenNativeComponent, type ViewProps } from 'react-native';
+import { codegenNativeComponent, type HostComponent, type ViewProps } from 'react-native';
 
 export interface NativeProps extends ViewProps {}
 
@@ -8,4 +8,4 @@ export interface NativeProps extends ViewProps {}
  */
 export default codegenNativeComponent<NativeProps>('RNFoldablePane', {
   interfaceOnly: true,
-});
+}) as HostComponent<NativeProps>;

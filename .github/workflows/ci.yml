@@ -23,14 +23,15 @@ jobs:
 
   ios:
     name: Build example (iOS)
-    runs-on: macos-15
+    # React Native 0.86 needs Xcode 27. GitHub ships it on the `xcode-27` preview
+    # image (Xcode 27.0, iOS 27.0 SDK). The adaptive code path is compile-gated on
+    # SDK 27.1, so this job proves the library builds on both sides of the gate.
+    runs-on: xcode-27
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
+      - run: sudo xcode-select -s /Applications/Xcode.app && xcodebuild -version
       - name: Prebuild
         run: yarn example prebuild
         env:

@@ -1,4 +1,9 @@
-import { type CodegenTypes, codegenNativeComponent, type ViewProps } from 'react-native';
+import {
+  type CodegenTypes,
+  codegenNativeComponent,
+  type HostComponent,
+  type ViewProps,
+} from 'react-native';
 
 type HingeEvent = Readonly<{
   available: boolean;
@@ -13,4 +18,6 @@ export interface NativeProps extends ViewProps {
   onHingeUpdate?: CodegenTypes.DirectEventHandler<HingeEvent>;
 }
 
-export default codegenNativeComponent<NativeProps>('RNFoldableLayout');
+export default codegenNativeComponent<NativeProps>(
+  'RNFoldableLayout',
+) as HostComponent<NativeProps>;
