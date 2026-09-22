@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import type { HingeState } from 'react-native-foldable';
-import { radius, space } from './theme';
+import { palette, radius, space } from './theme';
 
 export interface HingeGaugeProps {
   hinge: HingeState;
@@ -27,7 +27,9 @@ export function HingeGauge({ hinge, accent, text }: HingeGaugeProps) {
           {degrees === null ? '––' : `${degrees}°`}
         </Text>
         <View style={[styles.badge, { borderColor: accent }]}>
-          <View style={[styles.dot, { backgroundColor: hinge.available ? accent : '#C4C4CC' }]} />
+          <View
+            style={[styles.dot, { backgroundColor: hinge.available ? accent : palette.inkMuted }]}
+          />
           <Text style={[styles.badgeText, { color: text }]}>
             {hinge.available ? POSTURE_LABEL[hinge.posture] : 'No hinge'}
           </Text>
@@ -65,10 +67,10 @@ const styles = StyleSheet.create({
   track: {
     height: 6,
     borderRadius: radius.sm,
-    backgroundColor: 'rgba(0,0,0,0.08)',
+    backgroundColor: palette.hairline,
     overflow: 'hidden',
   },
   fill: { height: '100%', borderRadius: radius.sm },
   ticks: { flexDirection: 'row', justifyContent: 'space-between' },
-  tick: { fontSize: 10, color: 'rgba(0,0,0,0.4)', fontVariant: ['tabular-nums'] },
+  tick: { fontSize: 10, color: palette.inkMuted, fontVariant: ['tabular-nums'] },
 });

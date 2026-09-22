@@ -1,7 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { FoldableLayout, type LayoutAxis, type LayoutMode } from 'react-native-foldable';
+import {
+  FoldableLayout,
+  type LayoutAxis,
+  type LayoutMode,
+  type OverlayEdge,
+} from 'react-native-foldable';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Chip } from './Chip';
 import { Pane } from './Pane';
@@ -9,15 +14,18 @@ import { palette, radius, space } from './theme';
 
 const MODES: readonly LayoutMode[] = ['split', 'overlay'];
 const AXES: readonly LayoutAxis[] = ['any', 'horizontal', 'vertical'];
+// 'auto' leaves the edge unset so the system chooses.
+const EDGES: readonly (OverlayEdge | 'auto')[] = ['auto', 'leading', 'trailing'];
 
 export default function App() {
   const [mode, setMode] = useState<LayoutMode>('split');
   const [axis, setAxis] = useState<LayoutAxis>('any');
+  const [edge, setEdge] = useState<OverlayEdge | 'auto'>('auto');
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.screen}>
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
 
         <View style={styles.header}>
           <Text style={styles.title}>Foldable Playground</Text>
@@ -39,12 +47,25 @@ export default function App() {
                 onPress={() => setAxis(option)}
               />
             ))}
+            {mode === 'overlay' && (
+              <>
+                <View style={styles.divider} />
+                {EDGES.map((option) => (
+                  <Chip
+                    key={option}
+                    label={option}
+                    selected={option === edge}
+                    onPress={() => setEdge(option)}
+                  />
+                ))}
+              </>
+            )}
           </View>
         </View>
 
         <View style={styles.stage}>
           <FoldableLayout style={styles.layout} mode={mode} axis={axis}>
-            <FoldableLayout.Primary>
+            <FoldableLayout.Primary overlayEdge={edge === 'auto' ? undefined : edge}>
               <Pane slot="primary" mode={mode} />
             </FoldableLayout.Primary>
             <FoldableLayout.Secondary>

@@ -52,9 +52,20 @@ export function Pane({ slot, mode }: PaneProps) {
       testID={`${slot}-pane`}
       onLayout={onLayout}
       pointerEvents={floating ? 'box-none' : 'auto'}
-      style={[styles.pane, floating ? styles.floating : { backgroundColor: theme.fill }]}
+      style={[
+        styles.pane,
+        floating ? styles.floating : { backgroundColor: theme.fill, borderColor: theme.accent },
+      ]}
     >
-      <View style={[styles.card, floating && { backgroundColor: theme.fill }]}>
+      <View
+        style={[
+          styles.card,
+          floating && [
+            styles.cardFloating,
+            { backgroundColor: theme.fill, borderColor: theme.accent },
+          ],
+        ]}
+      >
         <View style={styles.header}>
           <Text style={[styles.eyebrow, { color: theme.accent }]}>{slot.toUpperCase()} PANE</Text>
           <Text testID={`${slot}-size`} style={[styles.size, { color: theme.text }]}>
@@ -82,20 +93,21 @@ export function Pane({ slot, mode }: PaneProps) {
 }
 
 const styles = StyleSheet.create({
-  pane: { flex: 1, padding: space.lg },
-  floating: { backgroundColor: 'transparent', justifyContent: 'flex-end' },
+  pane: { flex: 1, padding: space.lg, borderWidth: 1.5, borderRadius: radius.lg },
+  floating: { backgroundColor: 'transparent', borderWidth: 0, justifyContent: 'flex-end' },
   card: {
     gap: space.lg,
     borderRadius: radius.lg,
     padding: space.xl,
   },
+  cardFloating: { borderWidth: 1.5 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
   eyebrow: { fontSize: 11, fontWeight: '800', letterSpacing: 1.2 },
   size: { fontSize: 12, fontWeight: '600', fontVariant: ['tabular-nums'], opacity: 0.7 },
   log: {
     gap: space.xs,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0,0,0,0.12)',
+    borderTopColor: palette.hairline,
     paddingTop: space.md,
   },
   logEmpty: { fontSize: 12, color: palette.inkMuted, fontStyle: 'italic' },
