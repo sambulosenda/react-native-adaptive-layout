@@ -1,10 +1,11 @@
 import { createElement } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 import { HingeStoreContext } from '../src/hinge/context';
 import { toHingeState, UNAVAILABLE_HINGE } from '../src/hinge/state';
 import { createHingeStore } from '../src/hinge/store';
 import { useHinge } from '../src/hinge/useHinge';
+import { useHingeSelector } from '../src/hinge/useHingeSelector';
 import type { HingeState } from '../src/types';
 import './setup';
 
@@ -22,11 +23,28 @@ describe('toHingeState', () => {
     expect(state.posture).toBe('partiallyOpen');
   });
 
-  it('degrades unknown postures and non-finite angles safely', () => {
+  it('degrades unknown postures safely', () => {
     expect(toHingeState({ available: true, angle: 1, posture: 'tented' }).posture).toBe('unknown');
-    const nan = toHingeState({ available: true, angle: Number.NaN, posture: 'closed' });
-    expect(nan.angleRadians).toBeNull();
-    expect(nan.angleDegrees).toBeNull();
+  });
+
+  it('reports an unreadable angle as unavailable', () => {
+    expect(toHingeState({ available: true, angle: Number.NaN, posture: 'closed' })).toBe(
+      UNAVAILABLE_HINGE,
+    );
+    expect(toHingeState({ available: true, angle: Infinity, posture: 'closed' })).toBe(
+      UNAVAILABLE_HINGE,
+    );
+  });
+
+  it('narrows angles through available (checked by tsc)', () => {
+    const hinge: HingeState = toHingeState({ available: true, angle: 1, posture: 'closed' });
+    if (hinge.available) {
+      expectTypeOf(hinge.angleDegrees).toEqualTypeOf<number>();
+      expectTypeOf(hinge.angleRadians).toEqualTypeOf<number>();
+    } else {
+      expectTypeOf(hinge.angleDegrees).toEqualTypeOf<null>();
+      expectTypeOf(hinge.posture).toEqualTypeOf<'unknown'>();
+    }
   });
 
   it('never infers posture from the angle', () => {
@@ -113,5 +131,74 @@ describe('useHinge', () => {
       store.publish(UNAVAILABLE_HINGE);
     });
     expect(second).toHaveLength(1);
+  });
+});
+
+describe('useHingeSelector', () => {
+  const at = (degrees: number, posture: string) =>
+    toHingeState({ available: true, angle: (degrees * Math.PI) / 180, posture });
+
+  function mount<T>(
+    store: ReturnType<typeof createHingeStore>,
+    select: (hinge: HingeState) => T,
+    isEqual?: (a: T, b: T) => boolean,
+  ) {
+    const renders: T[] = [];
+    function Probe() {
+      const value = useHingeSelector(select, isEqual);
+      renders.push(value);
+      return null;
+    }
+    let root!: ReactTestRenderer;
+    act(() => {
+      root = create(
+        createElement(HingeStoreContext.Provider, { value: store }, createElement(Probe)),
+      );
+    });
+    return { renders, root };
+  }
+
+  it('throws outside a FoldableLayout', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    function Probe() {
+      useHingeSelector((hinge) => hinge.posture);
+      return null;
+    }
+    expect(() => {
+      act(() => {
+        create(createElement(Probe));
+      });
+    }).toThrow(/useHingeSelector must be called inside a FoldableLayout/);
+    error.mockRestore();
+  });
+
+  it('re-renders only when the selected value changes', () => {
+    const store = createHingeStore(at(90, 'partiallyOpen'));
+    const { renders, root } = mount(store, (hinge) => hinge.posture);
+    expect(renders).toEqual(['partiallyOpen']);
+
+    act(() => store.publish(at(95, 'partiallyOpen')));
+    act(() => store.publish(at(100, 'partiallyOpen')));
+    expect(renders).toEqual(['partiallyOpen']);
+
+    act(() => store.publish(at(180, 'fullyOpen')));
+    expect(renders).toEqual(['partiallyOpen', 'fullyOpen']);
+    act(() => root.unmount());
+  });
+
+  it('keeps an equal object selection stable with a custom comparison', () => {
+    const store = createHingeStore(at(90, 'partiallyOpen'));
+    const { renders, root } = mount(
+      store,
+      (hinge) => ({ open: hinge.posture !== 'closed' }),
+      (a, b) => a.open === b.open,
+    );
+    act(() => store.publish(at(120, 'partiallyOpen')));
+    act(() => store.publish(at(180, 'fullyOpen')));
+    expect(renders).toHaveLength(1);
+
+    act(() => store.publish(at(0, 'closed')));
+    expect(renders.map((value) => value.open)).toEqual([true, false]);
+    act(() => root.unmount());
   });
 });

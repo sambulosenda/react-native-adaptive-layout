@@ -16,7 +16,7 @@
 ┌──────────────────────────────────────────────────────────────────────┐
 │ React                                                                │
 │  FoldableLayout ─ resolves slots ─ owns a HingeStore (Context)       │
-│  useHinge ─ useSyncExternalStore on the nearest store                │
+│  useHinge / useHingeSelector ─ useSyncExternalStore on nearest store │
 ├──────────────────────────────────────────────────────────────────────┤
 │ Codegen (src/native)                                                 │
 │  RNFoldableLayout  props: mode, axis, trackHinge  event: onHingeUpdate│
