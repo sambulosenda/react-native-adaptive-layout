@@ -1,6 +1,6 @@
 import { createElement, Fragment } from 'react';
 import { describe, expect, it } from 'vitest';
-import { Primary, resolveSlots, Secondary } from '../src/layout/slots';
+import { Primary, resolveOverlayEdges, resolveSlots, Secondary } from '../src/layout/slots';
 
 describe('resolveSlots', () => {
   it('matches slots by identity regardless of order', () => {
@@ -62,5 +62,40 @@ describe('resolveSlots', () => {
       expect.stringContaining('Primary is missing'),
       expect.stringContaining('Secondary is missing'),
     ]);
+  });
+});
+
+describe('resolveOverlayEdges', () => {
+  it('leaves both unset so the system chooses', () => {
+    expect(resolveOverlayEdges(undefined, undefined)).toEqual({
+      primary: 'none',
+      secondary: 'none',
+      issues: [],
+    });
+  });
+
+  it('gives the other slot the opposite edge when only one is set', () => {
+    expect(resolveOverlayEdges('trailing', undefined)).toMatchObject({
+      primary: 'trailing',
+      secondary: 'leading',
+    });
+    expect(resolveOverlayEdges(undefined, 'trailing')).toMatchObject({
+      primary: 'leading',
+      secondary: 'trailing',
+    });
+  });
+
+  it('passes explicit edges through unchanged', () => {
+    expect(resolveOverlayEdges('leading', 'trailing')).toEqual({
+      primary: 'leading',
+      secondary: 'trailing',
+      issues: [],
+    });
+  });
+
+  it('reports both panes claiming the same edge', () => {
+    const result = resolveOverlayEdges('trailing', 'trailing');
+    expect(result).toMatchObject({ primary: 'trailing', secondary: 'trailing' });
+    expect(result.issues).toEqual([expect.stringContaining('overlap')]);
   });
 });
