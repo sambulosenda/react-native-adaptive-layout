@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "paths": { "react-native-foldable": ["./src/index"] },
-    "customConditions": ["react-native-foldable-source", "react-native-strict-api"],
+    "paths": { "react-native-adaptive-layout": ["./src/index"] },
+    "customConditions": ["react-native-adaptive-layout-source", "react-native-strict-api"],
     "allowImportingTsExtensions": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

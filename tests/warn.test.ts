@@ -12,7 +12,7 @@ describe('warnOnce', () => {
     warnOnce(['a', 'b']);
     warnOnce(['a']);
     expect(warn).toHaveBeenCalledTimes(2);
-    expect(warn).toHaveBeenCalledWith('[react-native-foldable] a');
+    expect(warn).toHaveBeenCalledWith('[react-native-adaptive-layout] a');
   });
 
   it('is silent in production', () => {

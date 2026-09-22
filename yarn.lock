@@ -7551,6 +7551,52 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-adaptive-layout-example@workspace:example":
+  version: 0.0.0-use.local
+  resolution: "react-native-adaptive-layout-example@workspace:example"
+  dependencies:
+    "@expo/metro-runtime": "npm:~57.0.16"
+    expo: "npm:~57.0.24"
+    expo-build-properties: "npm:~57.0.21"
+    expo-status-bar: "npm:~57.0.1"
+    react: "npm:19.2.3"
+    react-native: "npm:0.86.3"
+    react-native-adaptive-layout: "workspace:*"
+    react-native-builder-bob: "npm:^0.43.1"
+    react-native-monorepo-config: "npm:^0.4.0"
+    react-native-safe-area-context: "npm:~5.7.0"
+  languageName: unknown
+  linkType: soft
+
+"react-native-adaptive-layout@workspace:*, react-native-adaptive-layout@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "react-native-adaptive-layout@workspace:."
+  dependencies:
+    "@biomejs/biome": "npm:^2.3.0"
+    "@changesets/changelog-github": "npm:^0.5.0"
+    "@changesets/cli": "npm:^2.29.0"
+    "@commitlint/cli": "npm:^20.0.0"
+    "@commitlint/config-conventional": "npm:^20.0.0"
+    "@react-native/babel-preset": "npm:0.86.2"
+    "@types/node": "npm:^24"
+    "@types/react": "npm:^19.2.0"
+    "@types/react-test-renderer": "npm:^19.0.0"
+    "@vitest/coverage-v8": "npm:^3.2.0"
+    del-cli: "npm:^7.0.0"
+    lefthook: "npm:^1.13.0"
+    react: "npm:19.2.3"
+    react-native: "npm:0.86.3"
+    react-native-builder-bob: "npm:^0.43.1"
+    react-test-renderer: "npm:19.2.3"
+    turbo: "npm:^2.10.8"
+    typescript: "npm:^6.0.3"
+    vitest: "npm:^3.2.0"
+  peerDependencies:
+    react: ">=19.0.0"
+    react-native: ">=0.83.0"
+  languageName: unknown
+  linkType: soft
+
 "react-native-builder-bob@npm:^0.43.1":
   version: 0.43.1
   resolution: "react-native-builder-bob@npm:0.43.1"
@@ -7582,52 +7628,6 @@ __metadata:
   checksum: 10c0/aa7423d549f3dedac66950482dd4c62c6ad42f3a04c47ac23e37bb454103b5fc18fc1bd889f0156d64c3e786f47f6046705736cbe43af9a0563ae90f14f41792
   languageName: node
   linkType: hard
-
-"react-native-foldable-example@workspace:example":
-  version: 0.0.0-use.local
-  resolution: "react-native-foldable-example@workspace:example"
-  dependencies:
-    "@expo/metro-runtime": "npm:~57.0.16"
-    expo: "npm:~57.0.24"
-    expo-build-properties: "npm:~57.0.21"
-    expo-status-bar: "npm:~57.0.1"
-    react: "npm:19.2.3"
-    react-native: "npm:0.86.3"
-    react-native-builder-bob: "npm:^0.43.1"
-    react-native-foldable: "workspace:*"
-    react-native-monorepo-config: "npm:^0.4.0"
-    react-native-safe-area-context: "npm:~5.7.0"
-  languageName: unknown
-  linkType: soft
-
-"react-native-foldable@workspace:*, react-native-foldable@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "react-native-foldable@workspace:."
-  dependencies:
-    "@biomejs/biome": "npm:^2.3.0"
-    "@changesets/changelog-github": "npm:^0.5.0"
-    "@changesets/cli": "npm:^2.29.0"
-    "@commitlint/cli": "npm:^20.0.0"
-    "@commitlint/config-conventional": "npm:^20.0.0"
-    "@react-native/babel-preset": "npm:0.86.2"
-    "@types/node": "npm:^24"
-    "@types/react": "npm:^19.2.0"
-    "@types/react-test-renderer": "npm:^19.0.0"
-    "@vitest/coverage-v8": "npm:^3.2.0"
-    del-cli: "npm:^7.0.0"
-    lefthook: "npm:^1.13.0"
-    react: "npm:19.2.3"
-    react-native: "npm:0.86.3"
-    react-native-builder-bob: "npm:^0.43.1"
-    react-test-renderer: "npm:19.2.3"
-    turbo: "npm:^2.10.8"
-    typescript: "npm:^6.0.3"
-    vitest: "npm:^3.2.0"
-  peerDependencies:
-    react: ">=19.0.0"
-    react-native: ">=0.83.0"
-  languageName: unknown
-  linkType: soft
 
 "react-native-monorepo-config@npm:^0.4.0":
   version: 0.4.0

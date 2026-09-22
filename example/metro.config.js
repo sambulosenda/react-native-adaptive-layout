@@ -8,5 +8,5 @@ const root = path.resolve(__dirname, '..');
 module.exports = withMetroConfig(getDefaultConfig(__dirname), {
   root,
   dirname: __dirname,
-  conditions: ['react-native-foldable-source'],
+  conditions: ['react-native-adaptive-layout-source'],
 });

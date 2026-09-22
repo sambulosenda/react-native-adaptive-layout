@@ -6,7 +6,7 @@ import {
   type LayoutAxis,
   type LayoutMode,
   type OverlayEdge,
-} from 'react-native-foldable';
+} from 'react-native-adaptive-layout';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Chip } from './Chip';
 import { Pane } from './Pane';

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Foldable Example",
-    "slug": "react-native-foldable-example",
+    "slug": "react-native-adaptive-layout-example",
     "version": "1.0.0",
     "orientation": "default",
     "userInterfaceStyle": "dark",

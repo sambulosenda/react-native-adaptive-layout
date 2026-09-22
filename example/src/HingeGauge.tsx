@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import type { HingeState } from 'react-native-foldable';
+import type { HingeState } from 'react-native-adaptive-layout';
 import { palette, radius, space } from './theme';
 
 export interface HingeGaugeProps {
