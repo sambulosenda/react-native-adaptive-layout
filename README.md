@@ -67,8 +67,12 @@ For floating controls in overlay mode, give the primary root a transparent backg
 
 Each slot accepts an optional `overlayEdge` (`'leading' | 'trailing'`). In overlay mode the system
 may turn the overlay into a side-by-side layout (for example when a foldable is unfolded);
-`overlayEdge` anchors that pane to the given edge when it does. Unset lets the system choose. It is
-ignored in split mode and in fallbacks.
+`overlayEdge` anchors that pane to the given edge when it does. Set it on one slot and the other slot
+gets the opposite edge; set neither and the system chooses. It is ignored in split mode and in
+fallbacks.
+
+On iPhone Duo the overlay turns side-by-side in the half-open posture, not when fully open. The two
+display halves are not equal widths, so panes can differ in size depending on the side.
 
 ```tsx
 <FoldableLayout mode="overlay">

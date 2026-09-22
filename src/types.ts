@@ -50,8 +50,10 @@ export interface SlotProps {
   children?: ReactNode;
   /**
    * In overlay mode, the edge this pane is anchored to when the system
-   * transitions the overlay into a side-by-side layout. When unset, the
-   * system chooses. Ignored in split mode and in fallbacks.
+   * transitions the overlay into a side-by-side layout (on iPhone Duo, the
+   * half-open posture). Setting it on one slot gives the other slot the
+   * opposite edge; when neither is set, the system chooses. Ignored in split
+   * mode and in fallbacks.
    */
   overlayEdge?: OverlayEdge;
 }

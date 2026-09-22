@@ -1,6 +1,6 @@
 import type { ReactElement, ReactNode } from 'react';
 import { Children, Fragment, isValidElement } from 'react';
-import type { SlotProps } from '../types';
+import type { OverlayEdge, SlotProps } from '../types';
 
 /** Marks the content of the primary pane. Renders no view of its own. */
 export function Primary({ children }: SlotProps): ReactNode {
@@ -48,6 +48,39 @@ export function resolveSlots(children: ReactNode): ResolvedSlots {
   if (!secondary) issues.push(missing('Secondary'));
 
   return { primary, secondary, issues };
+}
+
+export interface ResolvedOverlayEdges {
+  primary: OverlayEdge | 'none';
+  secondary: OverlayEdge | 'none';
+  issues: string[];
+}
+
+const OPPOSITE: Record<OverlayEdge, OverlayEdge> = { leading: 'trailing', trailing: 'leading' };
+
+/**
+ * Resolves the edges passed to the native overlay arrangement.
+ *
+ * SwiftUI does not reconcile per-pane edges: when only one pane sets an edge
+ * the other still defaults to trailing, so `trailing` on one pane stacks both
+ * panes on the same side. Setting one slot therefore gives the other slot the
+ * opposite edge. With neither set, the system chooses (see ADR 0005).
+ */
+export function resolveOverlayEdges(
+  primary: OverlayEdge | undefined,
+  secondary: OverlayEdge | undefined,
+): ResolvedOverlayEdges {
+  const issues: string[] = [];
+  if (primary && secondary && primary === secondary) {
+    issues.push(
+      `Both panes set overlayEdge="${primary}", so they will overlap on that side. Set opposite edges or set only one.`,
+    );
+  }
+  return {
+    primary: primary ?? (secondary ? OPPOSITE[secondary] : 'none'),
+    secondary: secondary ?? (primary ? OPPOSITE[primary] : 'none'),
+    issues,
+  };
 }
 
 function duplicate(slot: string): string {
