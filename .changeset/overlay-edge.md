@@ -1,0 +1,5 @@
+---
+'react-native-foldable': minor
+---
+
+Add `overlayEdge` to `FoldableLayout.Primary` and `FoldableLayout.Secondary`. In overlay mode it anchors the pane to the leading or trailing edge when the system turns the overlay into a side-by-side layout (iOS 27.1+). Ignored in split mode and fallbacks.

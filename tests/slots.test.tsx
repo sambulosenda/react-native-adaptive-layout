@@ -13,6 +13,15 @@ describe('resolveSlots', () => {
     expect(result.issues).toEqual([]);
   });
 
+  it('preserves slot props such as overlayEdge', () => {
+    const result = resolveSlots([
+      createElement(Primary, { overlayEdge: 'trailing' }, 'a'),
+      createElement(Secondary, null, 'b'),
+    ]);
+    expect(result.primary).toMatchObject({ props: { overlayEdge: 'trailing' } });
+    expect(result.secondary?.props).not.toHaveProperty('overlayEdge');
+  });
+
   it('keeps the first of duplicate slots and reports the rest', () => {
     const result = resolveSlots([
       createElement(Primary, { key: '1' }, 'a'),

@@ -8,5 +8,6 @@ export type {
   HingeState,
   LayoutAxis,
   LayoutMode,
+  OverlayEdge,
   SlotProps,
 } from './types';

@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { type ReactElement, useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { HingeStoreContext } from '../hinge/context';
 import { toHingeState, UNAVAILABLE_HINGE } from '../hinge/state';
 import { createHingeStore } from '../hinge/store';
 import NativeFoldableLayout, { type NativeProps } from '../native/FoldableLayoutNativeComponent';
 import NativeFoldablePane from '../native/FoldablePaneNativeComponent';
-import type { FoldableLayoutProps } from '../types';
+import type { FoldableLayoutProps, SlotProps } from '../types';
 import { warnOnce } from '../warn';
 import { Primary, resolveSlots, Secondary } from './slots';
 
@@ -44,6 +44,8 @@ export function FoldableLayout({
         mode={mode}
         axis={axis}
         trackHinge={trackHinge}
+        primaryOverlayEdge={overlayEdgeOf(primary)}
+        secondaryOverlayEdge={overlayEdgeOf(secondary)}
         onHingeUpdate={onHingeUpdate}
       >
         <NativeFoldablePane collapsable={false} pointerEvents="box-none" style={styles.pane}>
@@ -58,6 +60,10 @@ export function FoldableLayout({
 }
 FoldableLayout.Primary = Primary;
 FoldableLayout.Secondary = Secondary;
+
+function overlayEdgeOf(slot: ReactElement<SlotProps> | null) {
+  return slot?.props.overlayEdge ?? 'none';
+}
 
 const styles = StyleSheet.create({
   pane: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },

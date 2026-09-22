@@ -65,6 +65,22 @@ Hiding a pane never unmounts its React tree, so component state survives posture
 For floating controls in overlay mode, give the primary root a transparent background and
 `pointerEvents="box-none"` so touches reach the secondary pane through empty areas.
 
+Each slot accepts an optional `overlayEdge` (`'leading' | 'trailing'`). In overlay mode the system
+may turn the overlay into a side-by-side layout (for example when a foldable is unfolded);
+`overlayEdge` anchors that pane to the given edge when it does. Unset lets the system choose. It is
+ignored in split mode and in fallbacks.
+
+```tsx
+<FoldableLayout mode="overlay">
+  <FoldableLayout.Primary overlayEdge="trailing">
+    <PlayerControls />
+  </FoldableLayout.Primary>
+  <FoldableLayout.Secondary>
+    <Video />
+  </FoldableLayout.Secondary>
+</FoldableLayout>
+```
+
 The layout applies no safe-area insets. Place it inside your safe-area container.
 
 ### `useHinge(listener?)`

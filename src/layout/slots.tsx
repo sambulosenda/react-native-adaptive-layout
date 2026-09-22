@@ -15,8 +15,8 @@ export function Secondary({ children }: SlotProps): ReactNode {
 Secondary.displayName = 'FoldableLayout.Secondary';
 
 export interface ResolvedSlots {
-  primary: ReactElement | null;
-  secondary: ReactElement | null;
+  primary: ReactElement<SlotProps> | null;
+  secondary: ReactElement<SlotProps> | null;
   /** Human-readable issues with the supplied children, for development warnings. */
   issues: string[];
 }
@@ -27,16 +27,16 @@ export interface ResolvedSlots {
  */
 export function resolveSlots(children: ReactNode): ResolvedSlots {
   const issues: string[] = [];
-  let primary: ReactElement | null = null;
-  let secondary: ReactElement | null = null;
+  let primary: ReactElement<SlotProps> | null = null;
+  let secondary: ReactElement<SlotProps> | null = null;
 
   for (const child of Children.toArray(children)) {
     if (isValidElement(child) && child.type === Primary) {
       if (primary) issues.push(duplicate('Primary'));
-      else primary = child;
+      else primary = child as ReactElement<SlotProps>;
     } else if (isValidElement(child) && child.type === Secondary) {
       if (secondary) issues.push(duplicate('Secondary'));
-      else secondary = child;
+      else secondary = child as ReactElement<SlotProps>;
     } else {
       issues.push(
         `Ignoring unexpected child ${describe(child)}. Only FoldableLayout.Primary and FoldableLayout.Secondary are rendered.`,

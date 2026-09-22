@@ -23,6 +23,26 @@ static NSString *RNFoldableAxisName(RNFoldableLayoutAxis axis)
   return @"any";
 }
 
+static NSString *RNFoldableEdgeName(RNFoldableLayoutPrimaryOverlayEdge edge)
+{
+  switch (edge) {
+    case RNFoldableLayoutPrimaryOverlayEdge::Leading: return @"leading";
+    case RNFoldableLayoutPrimaryOverlayEdge::Trailing: return @"trailing";
+    case RNFoldableLayoutPrimaryOverlayEdge::None: return @"none";
+  }
+  return @"none";
+}
+
+static NSString *RNFoldableEdgeName(RNFoldableLayoutSecondaryOverlayEdge edge)
+{
+  switch (edge) {
+    case RNFoldableLayoutSecondaryOverlayEdge::Leading: return @"leading";
+    case RNFoldableLayoutSecondaryOverlayEdge::Trailing: return @"trailing";
+    case RNFoldableLayoutSecondaryOverlayEdge::None: return @"none";
+  }
+  return @"none";
+}
+
 @interface RNFoldableLayoutView () <RNFoldableLayoutHostDelegate>
 @end
 
@@ -84,7 +104,9 @@ static NSString *RNFoldableAxisName(RNFoldableLayoutAxis axis)
   const auto &next = *std::static_pointer_cast<const RNFoldableLayoutProps>(props);
   [_host applyWithMode:RNFoldableModeName(next.mode)
                   axis:RNFoldableAxisName(next.axis)
-            trackHinge:next.trackHinge];
+            trackHinge:next.trackHinge
+    primaryOverlayEdge:RNFoldableEdgeName(next.primaryOverlayEdge)
+  secondaryOverlayEdge:RNFoldableEdgeName(next.secondaryOverlayEdge)];
   [super updateProps:props oldProps:oldProps];
 }
 

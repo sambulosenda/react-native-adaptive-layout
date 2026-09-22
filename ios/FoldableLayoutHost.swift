@@ -21,9 +21,25 @@ private final class LayoutModel: ObservableObject {
     }
   }
 
+  /// Edge a pane is anchored to when an overlay turns side-by-side.
+  /// `none` leaves the choice to the system.
+  enum Edge: String {
+    case none, leading, trailing
+
+    var horizontalEdge: HorizontalEdge? {
+      switch self {
+      case .none: return nil
+      case .leading: return .leading
+      case .trailing: return .trailing
+      }
+    }
+  }
+
   @Published var mode: Mode = .split
   @Published var axis: Axis = .any
   @Published var trackHinge = true
+  @Published var primaryOverlayEdge: Edge = .none
+  @Published var secondaryOverlayEdge: Edge = .none
   @Published var primary: UIView?
   @Published var secondary: UIView?
 
@@ -139,7 +155,11 @@ private struct LayoutRoot: View {
         ArrangementView { primary } secondary: { secondary }
           .arrangementViewStyle(.split.axes(model.axis.axisSet))
       case .overlay:
-        ArrangementView { primary } secondary: { secondary }
+        ArrangementView {
+          primary.overlayArrangementEdge(model.primaryOverlayEdge.horizontalEdge)
+        } secondary: {
+          secondary.overlayArrangementEdge(model.secondaryOverlayEdge.horizontalEdge)
+        }
           .arrangementViewStyle(.overlay.axes(model.axis.axisSet))
       }
     }
@@ -202,11 +222,21 @@ private struct LayoutRoot: View {
     if model.secondary !== secondary { model.secondary = secondary }
   }
 
-  @objc public func apply(mode: String, axis: String, trackHinge: Bool) {
+  @objc public func apply(
+    mode: String,
+    axis: String,
+    trackHinge: Bool,
+    primaryOverlayEdge: String,
+    secondaryOverlayEdge: String
+  ) {
     let nextMode = LayoutModel.Mode(rawValue: mode) ?? .split
     let nextAxis = LayoutModel.Axis(rawValue: axis) ?? .any
+    let nextPrimaryEdge = LayoutModel.Edge(rawValue: primaryOverlayEdge) ?? .none
+    let nextSecondaryEdge = LayoutModel.Edge(rawValue: secondaryOverlayEdge) ?? .none
     if model.mode != nextMode { model.mode = nextMode }
     if model.axis != nextAxis { model.axis = nextAxis }
+    if model.primaryOverlayEdge != nextPrimaryEdge { model.primaryOverlayEdge = nextPrimaryEdge }
+    if model.secondaryOverlayEdge != nextSecondaryEdge { model.secondaryOverlayEdge = nextSecondaryEdge }
     if model.trackHinge != trackHinge {
       model.trackHinge = trackHinge
       if !trackHinge {

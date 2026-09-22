@@ -20,6 +20,7 @@
 ├──────────────────────────────────────────────────────────────────────┤
 │ Codegen (src/native)                                                 │
 │  RNFoldableLayout  props: mode, axis, trackHinge  event: onHingeUpdate│
+│                    primaryOverlayEdge, secondaryOverlayEdge          │
 │  RNFoldablePane    interfaceOnly; custom shadow node                 │
 ├──────────────────────────────────────────────────────────────────────┤
 │ Fabric (ios/RNFoldable*View.mm, RNFoldablePaneShadowNode.h)          │
@@ -35,7 +36,7 @@
 ## Data flow
 
 **Props down.** `FoldableLayout` → codegen props → `RNFoldableLayoutView.updateProps` →
-`RNFoldableLayoutHost.apply(mode:axis:trackHinge:)` → `LayoutModel` (`ObservableObject`) →
+`RNFoldableLayoutHost.apply(mode:axis:trackHinge:primaryOverlayEdge:secondaryOverlayEdge:)` → `LayoutModel` (`ObservableObject`) →
 SwiftUI re-renders.
 
 **Panes down.** React renders two `RNFoldablePane` children, always primary first. Fabric mounts

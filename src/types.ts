@@ -43,6 +43,15 @@ export interface FoldableLayoutProps extends ViewProps {
   trackHinge?: boolean;
 }
 
+/** A horizontal edge, resolved against the layout direction. */
+export type OverlayEdge = 'leading' | 'trailing';
+
 export interface SlotProps {
   children?: ReactNode;
+  /**
+   * In overlay mode, the edge this pane is anchored to when the system
+   * transitions the overlay into a side-by-side layout. When unset, the
+   * system chooses. Ignored in split mode and in fallbacks.
+   */
+  overlayEdge?: OverlayEdge;
 }
