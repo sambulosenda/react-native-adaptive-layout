@@ -22,15 +22,17 @@ export interface NativeHingePayload {
 
 /**
  * Converts a native payload into a `HingeState`. Unknown postures from newer
- * OS releases degrade to `'unknown'`; a non-finite angle becomes `null`.
+ * OS releases degrade to `'unknown'`. A hinge whose angle cannot be read (a
+ * non-finite value) is reported as unavailable, so `available: true` always
+ * carries a numeric angle.
  */
 export function toHingeState(payload: NativeHingePayload): HingeState {
-  if (!payload.available) return UNAVAILABLE_HINGE;
-  const angleRadians = Number.isFinite(payload.angle) ? payload.angle : null;
+  if (!payload.available || !Number.isFinite(payload.angle)) return UNAVAILABLE_HINGE;
+  const angleRadians = payload.angle;
   return {
     available: true,
     angleRadians,
-    angleDegrees: angleRadians === null ? null : (angleRadians * 180) / Math.PI,
+    angleDegrees: (angleRadians * 180) / Math.PI,
     posture: POSTURES.has(payload.posture) ? (payload.posture as FoldPosture) : 'unknown',
   };
 }

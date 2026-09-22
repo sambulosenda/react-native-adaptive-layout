@@ -94,16 +94,33 @@ The optional listener receives the initial state and every change; it is always 
 so it needs no memoisation. Throws if called outside a layout pane.
 
 ```ts
-interface HingeState {
-  available: boolean;
-  angleRadians: number | null;
-  angleDegrees: number | null;
-  posture: 'unknown' | 'closed' | 'partiallyOpen' | 'fullyOpen';
-}
+type HingeState =
+  | { available: false; angleRadians: null; angleDegrees: null; posture: 'unknown' }
+  | {
+      available: true;
+      angleRadians: number;
+      angleDegrees: number;
+      posture: 'unknown' | 'closed' | 'partiallyOpen' | 'fullyOpen';
+    };
 ```
 
-Posture is reported by the OS and never inferred from the angle. Unknown postures from future OS
-releases surface as `'unknown'`.
+Checking `hinge.available` narrows the angles to `number`. Posture is reported by the OS and never
+inferred from the angle. Unknown postures from future OS releases surface as `'unknown'`; a hinge
+whose angle cannot be read is reported as unavailable.
+
+### `useHingeSelector(selector, isEqual?)`
+
+Like `useHinge`, but returns a derived value and re-renders only when it changes. The angle updates
+continuously while the hinge moves, so components that only care about posture should select it:
+
+```ts
+const posture = useHingeSelector((hinge) => hinge.posture);
+const isFlat = useHingeSelector((hinge) => hinge.posture === 'fullyOpen');
+```
+
+Values are compared with `Object.is` by default. If the selector returns a new object, pass a
+comparison as the second argument. Inline selectors are fine. Throws if called outside a layout
+pane.
 
 ## Platform behaviour
 

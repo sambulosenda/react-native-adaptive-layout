@@ -1,6 +1,6 @@
-import { useContext, useEffect, useRef, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import type { HingeListener, HingeState } from '../types';
-import { HingeStoreContext } from './context';
+import { useHingeStore } from './context';
 
 /**
  * Subscribes to the hinge of the nearest enclosing `FoldableLayout`.
@@ -12,12 +12,7 @@ import { HingeStoreContext } from './context';
  * Must be called from a component rendered inside a `FoldableLayout` pane.
  */
 export function useHinge(listener?: HingeListener): HingeState {
-  const store = useContext(HingeStoreContext);
-  if (!store) {
-    throw new Error(
-      'useHinge must be called inside a FoldableLayout.Primary or FoldableLayout.Secondary subtree.',
-    );
-  }
+  const store = useHingeStore('useHinge');
 
   const latest = useRef(listener);
   useEffect(() => {

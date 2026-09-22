@@ -13,17 +13,27 @@ export type FoldPosture = 'unknown' | 'closed' | 'partiallyOpen' | 'fullyOpen';
 /**
  * A snapshot of the hinge. When no hinge is present (`available === false`) the
  * angles are `null` and the posture is `'unknown'`; nothing is ever inferred.
+ * Checking `available` narrows the angles to `number`.
  */
-export interface HingeState {
-  readonly available: boolean;
-  /** Hinge angle in radians, or `null` when unavailable. */
-  readonly angleRadians: number | null;
-  /** Hinge angle in degrees, derived from `angleRadians` for convenience. */
-  readonly angleDegrees: number | null;
-  readonly posture: FoldPosture;
-}
+export type HingeState =
+  | {
+      readonly available: false;
+      readonly angleRadians: null;
+      readonly angleDegrees: null;
+      readonly posture: 'unknown';
+    }
+  | {
+      readonly available: true;
+      /** Hinge angle in radians, as reported by the OS. */
+      readonly angleRadians: number;
+      /** Hinge angle in degrees, derived from `angleRadians` for convenience. */
+      readonly angleDegrees: number;
+      readonly posture: FoldPosture;
+    };
 
 export type HingeListener = (hinge: HingeState) => void;
+
+export type HingeSelector<T> = (hinge: HingeState) => T;
 
 export interface FoldableLayoutProps extends ViewProps {
   /**
