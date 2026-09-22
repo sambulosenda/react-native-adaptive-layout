@@ -19,7 +19,8 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: changesets/action@v1
         with:
-          version: yarn version
+          # Not `yarn version`: Yarn 4's built-in version command shadows the script.
+          version: yarn changeset version
           publish: yarn release
           title: 'chore(release): version packages'
           commit: 'chore(release): version packages'
