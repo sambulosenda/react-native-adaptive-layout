@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { type LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
-import { type HingeState, type LayoutMode, useHinge } from 'react-native-foldable';
+import { type HingeState, type LayoutMode, useHinge } from 'react-native-adaptive-layout';
 import { HingeGauge } from './HingeGauge';
 import { palette, radius, space } from './theme';
 

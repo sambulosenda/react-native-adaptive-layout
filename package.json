@@ -1,5 +1,5 @@
 {
-  "name": "react-native-foldable",
+  "name": "react-native-adaptive-layout",
   "version": "0.1.0",
   "description": "Adaptive split/overlay layouts and hinge-aware hooks for foldable devices in React Native.",
   "license": "MIT",
@@ -26,7 +26,7 @@
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
-      "react-native-foldable-source": "./src/index.ts",
+      "react-native-adaptive-layout-source": "./src/index.ts",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -57,7 +57,7 @@
     "lint:fix": "biome check --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "example": "yarn workspace react-native-foldable-example",
+    "example": "yarn workspace react-native-adaptive-layout-example",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "yarn build && changeset publish",

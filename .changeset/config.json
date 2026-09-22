@@ -5,5 +5,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["react-native-foldable-example"]
+  "ignore": ["react-native-adaptive-layout-example"]
 }

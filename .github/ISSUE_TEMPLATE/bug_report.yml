@@ -4,7 +4,7 @@ labels: [bug, needs-triage]
 body:
   - type: input
     id: version
-    attributes: { label: react-native-foldable version }
+    attributes: { label: react-native-adaptive-layout version }
     validations: { required: true }
   - type: input
     id: rn

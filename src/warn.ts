@@ -6,7 +6,7 @@ export function warnOnce(messages: readonly string[]): void {
   for (const message of messages) {
     if (seen.has(message)) continue;
     seen.add(message);
-    console.warn(`[react-native-foldable] ${message}`);
+    console.warn(`[react-native-adaptive-layout] ${message}`);
   }
 }
 

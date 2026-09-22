@@ -1,4 +1,4 @@
-# react-native-foldable
+# react-native-adaptive-layout
 
 Adaptive split/overlay layouts and hinge-aware hooks for foldable devices in React Native.
 
@@ -14,7 +14,7 @@ Adaptive split/overlay layouts and hinge-aware hooks for foldable devices in Rea
 ## Install
 
 ```sh
-yarn add react-native-foldable
+yarn add react-native-adaptive-layout
 cd ios && pod install
 ```
 
@@ -25,7 +25,7 @@ supported.
 ## Usage
 
 ```tsx
-import { FoldableLayout, useHinge } from 'react-native-foldable';
+import { FoldableLayout, useHinge } from 'react-native-adaptive-layout';
 
 export function PlayerScreen() {
   return (

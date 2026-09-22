@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping build react-native-foldable. This guide gets you from clone to merged PR.
+Thanks for helping build react-native-adaptive-layout. This guide gets you from clone to merged PR.
 
 ## Prerequisites
 
