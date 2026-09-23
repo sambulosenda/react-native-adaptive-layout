@@ -1,5 +1,11 @@
 # react-native-adaptive-layout
 
+## 0.3.0
+
+### Minor Changes
+
+- [#14](https://github.com/sambulosenda/react-native-foldable/pull/14) [`7a6a2f7`](https://github.com/sambulosenda/react-native-foldable/commit/7a6a2f7f1292309ca307fee25f1630470a4477cb) Thanks [@sambulosenda](https://github.com/sambulosenda)! - Add a `react-native-adaptive-layout/testing` entry with `HingeTestProvider` and `createHingeState`, so components that use `useHinge` or `useHingeSelector` can be unit-tested without rendering a native `FoldableLayout`.
+
 ## 0.2.0
 
 ### Minor Changes
