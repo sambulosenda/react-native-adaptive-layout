@@ -17,6 +17,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+      # npm trusted publishing (OIDC) needs npm >= 11.5.1; Node 22 ships npm 10.
+      - run: npm install -g npm@^11.5.1
       - uses: changesets/action@v1
         with:
           # Not `yarn version`: Yarn 4's built-in version command shadows the script.
@@ -26,4 +28,5 @@ jobs:
           commit: 'chore(release): version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # No NPM_TOKEN: with id-token: write, changesets/action falls back to npm
+          # trusted publishing, configured for this workflow on npmjs.com.
