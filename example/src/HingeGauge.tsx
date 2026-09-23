@@ -51,7 +51,15 @@ export function HingeGauge({ hinge, accent, text }: HingeGaugeProps) {
 
 const styles = StyleSheet.create({
   container: { gap: space.sm },
-  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  // Wraps so the badge drops below the angle in narrow panes instead of overflowing.
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    columnGap: space.md,
+    rowGap: space.sm,
+  },
   angle: { fontSize: 40, fontWeight: '800', letterSpacing: -1.5, fontVariant: ['tabular-nums'] },
   badge: {
     flexDirection: 'row',

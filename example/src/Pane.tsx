@@ -112,7 +112,15 @@ const styles = StyleSheet.create({
     padding: space.xl,
   },
   cardFloating: { borderWidth: 1.5 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
+  // Wraps so the size drops below the eyebrow in narrow panes instead of colliding.
+  header: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    columnGap: space.md,
+    rowGap: space.xs,
+  },
   eyebrow: { fontSize: 11, fontWeight: '800', letterSpacing: 1.2 },
   arrangement: { fontSize: 13, fontWeight: '700', letterSpacing: 0.2 },
   size: { fontSize: 12, fontWeight: '600', fontVariant: ['tabular-nums'], opacity: 0.7 },
