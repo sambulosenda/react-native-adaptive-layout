@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
+import { ArrangementStoreContext } from '../arrangement/context';
+import { toArrangement } from '../arrangement/state';
+import { createArrangementStore } from '../arrangement/store';
 import { HingeStoreContext } from '../hinge/context';
 import { toHingeState, UNAVAILABLE_HINGE } from '../hinge/state';
 import { createHingeStore } from '../hinge/store';
@@ -10,6 +13,7 @@ import { warnOnce } from '../warn';
 import { Primary, resolveOverlayEdges, resolveSlots, Secondary } from './slots';
 
 type HingeUpdate = NonNullable<NativeProps['onHingeUpdate']>;
+type ArrangementUpdate = NonNullable<NativeProps['onArrangementUpdate']>;
 
 /**
  * iOS implementation backed by SwiftUI's adaptive arrangement APIs. The
@@ -23,10 +27,16 @@ export function FoldableLayout({
   ...viewProps
 }: FoldableLayoutProps) {
   const [store] = useState(createHingeStore);
+  const [arrangementStore] = useState(() => createArrangementStore());
 
   const onHingeUpdate = useCallback<HingeUpdate>(
     (event) => store.publish(toHingeState(event.nativeEvent)),
     [store],
+  );
+
+  const onArrangementUpdate = useCallback<ArrangementUpdate>(
+    (event) => arrangementStore.publish(toArrangement(event.nativeEvent)),
+    [arrangementStore],
   );
 
   useEffect(() => {
@@ -40,22 +50,25 @@ export function FoldableLayout({
   // Native assigns panes by mount index: primary first, secondary second.
   return (
     <HingeStoreContext value={store}>
-      <NativeFoldableLayout
-        {...viewProps}
-        mode={mode}
-        axis={axis}
-        trackHinge={trackHinge}
-        primaryOverlayEdge={edges.primary}
-        secondaryOverlayEdge={edges.secondary}
-        onHingeUpdate={onHingeUpdate}
-      >
-        <NativeFoldablePane collapsable={false} pointerEvents="box-none" style={styles.pane}>
-          {primary}
-        </NativeFoldablePane>
-        <NativeFoldablePane collapsable={false} pointerEvents="box-none" style={styles.pane}>
-          {secondary}
-        </NativeFoldablePane>
-      </NativeFoldableLayout>
+      <ArrangementStoreContext value={arrangementStore}>
+        <NativeFoldableLayout
+          {...viewProps}
+          mode={mode}
+          axis={axis}
+          trackHinge={trackHinge}
+          primaryOverlayEdge={edges.primary}
+          secondaryOverlayEdge={edges.secondary}
+          onHingeUpdate={onHingeUpdate}
+          onArrangementUpdate={onArrangementUpdate}
+        >
+          <NativeFoldablePane collapsable={false} pointerEvents="box-none" style={styles.pane}>
+            {primary}
+          </NativeFoldablePane>
+          <NativeFoldablePane collapsable={false} pointerEvents="box-none" style={styles.pane}>
+            {secondary}
+          </NativeFoldablePane>
+        </NativeFoldableLayout>
+      </ArrangementStoreContext>
     </HingeStoreContext>
   );
 }
