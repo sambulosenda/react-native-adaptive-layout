@@ -1,6 +1,11 @@
 import { useCallback, useState } from 'react';
 import { type LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
-import { type HingeState, type LayoutMode, useHinge } from 'react-native-adaptive-layout';
+import {
+  type HingeState,
+  type LayoutMode,
+  useArrangement,
+  useHinge,
+} from 'react-native-adaptive-layout';
 import { HingeGauge } from './HingeGauge';
 import { palette, radius, space } from './theme';
 
@@ -43,6 +48,8 @@ export function Pane({ slot, mode }: PaneProps) {
     );
   }, []);
   const hinge = useHinge(onHinge);
+  const arrangement = useArrangement();
+  const visibleCount = [arrangement.primary, arrangement.secondary].filter((p) => p.visible).length;
 
   const onLayout = ({ nativeEvent: { layout } }: LayoutChangeEvent) =>
     setSize({ width: Math.round(layout.width), height: Math.round(layout.height) });
@@ -73,6 +80,10 @@ export function Pane({ slot, mode }: PaneProps) {
           </Text>
         </View>
 
+        <Text testID={`${slot}-arrangement`} style={[styles.arrangement, { color: theme.accent }]}>
+          {arrangement.kind} · {visibleCount} visible
+        </Text>
+
         <HingeGauge hinge={hinge} accent={theme.accent} text={theme.text} />
 
         <View style={styles.log}>
@@ -101,8 +112,17 @@ const styles = StyleSheet.create({
     padding: space.xl,
   },
   cardFloating: { borderWidth: 1.5 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
+  // Wraps so the size drops below the eyebrow in narrow panes instead of colliding.
+  header: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    columnGap: space.md,
+    rowGap: space.xs,
+  },
   eyebrow: { fontSize: 11, fontWeight: '800', letterSpacing: 1.2 },
+  arrangement: { fontSize: 13, fontWeight: '700', letterSpacing: 0.2 },
   size: { fontSize: 12, fontWeight: '600', fontVariant: ['tabular-nums'], opacity: 0.7 },
   log: {
     gap: space.xs,

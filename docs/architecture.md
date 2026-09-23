@@ -20,7 +20,8 @@
 ├──────────────────────────────────────────────────────────────────────┤
 │ Codegen (src/native)                                                 │
 │  RNFoldableLayout  props: mode, axis, trackHinge  event: onHingeUpdate│
-│                    primaryOverlayEdge, secondaryOverlayEdge          │
+│                    primaryOverlayEdge, secondaryOverlayEdge,         │
+│                    splitRatio                                        │
 │  RNFoldablePane    interfaceOnly; custom shadow node                 │
 ├──────────────────────────────────────────────────────────────────────┤
 │ Fabric (ios/RNFoldable*View.mm, RNFoldablePaneShadowNode.h)          │
@@ -36,7 +37,7 @@
 ## Data flow
 
 **Props down.** `FoldableLayout` → codegen props → `RNFoldableLayoutView.updateProps` →
-`RNFoldableLayoutHost.apply(mode:axis:trackHinge:primaryOverlayEdge:secondaryOverlayEdge:)` → `LayoutModel` (`ObservableObject`) →
+`RNFoldableLayoutHost.apply(mode:axis:trackHinge:primaryOverlayEdge:secondaryOverlayEdge:splitRatio:)` → `LayoutModel` (`ObservableObject`) →
 SwiftUI re-renders.
 
 **Panes down.** React renders two `RNFoldablePane` children, always primary first. Fabric mounts
@@ -50,6 +51,10 @@ coordinates. `RNFoldablePaneView.applyNativeFrame` sets the UIKit frame and writ
 `getContentOriginOffset` supplies the SwiftUI-assigned origin so `measure` / `measureInWindow`
 inside a pane are accurate. The pane must not be a `RootNodeKind`: React Native stops walking
 ancestors at root nodes when measuring, which drops the layout's own offset in the window.
+
+**Arrangement up.** `PaneContainer.didMoveToWindow` (visibility: SwiftUI detaches hidden panes) and
+`layoutSubviews` (frame) → `RNFoldableLayoutHost.recordPane` → coalesced, de-duplicated
+`onArrangementUpdate` → `toArrangement` → arrangement store → `useArrangement` subscribers.
 
 **Hinge up.** `.onHingeChange` → `LayoutRoot.report` → host delegate →
 `RNFoldableLayoutView` → `onHingeUpdate` direct event → `toHingeState` → `HingeStore.publish` →
@@ -88,6 +93,8 @@ The secondary React tree stays mounted in every fallback.
 
 1. Implement `RNFoldableLayout` and `RNFoldablePane` against the codegen specs in `src/native`.
 2. Honour the pane-index contract (0 = primary, 1 = secondary).
-3. Emit `onHingeUpdate` with `{ available, angle (radians), posture }`.
+3. Emit `onHingeUpdate` with `{ available, angle (radians), posture }`, and `onArrangementUpdate`
+   with each pane's visibility and frame in layout coordinates. Without it `useArrangement` stays
+   `unknown`.
 4. Replace the platform's fallback file in `src/layout` (e.g. `FoldableLayout.android.tsx`).
 5. Document the platform in README's behaviour table and add an ADR.

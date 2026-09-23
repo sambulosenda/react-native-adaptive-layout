@@ -56,6 +56,7 @@ function Controls() {
 | `mode`         | `'split' \| 'overlay'`                | `'split'` | In overlay the primary pane floats above the secondary.                    |
 | `axis`         | `'any' \| 'horizontal' \| 'vertical'` | `'any'`   | Restricts which axis the system may split on. It never forces a split.     |
 | `trackHinge`   | `boolean`                             | `true`    | Gate hinge events for `useHinge` inside this layout. Layout is unaffected. |
+| `splitRatio`   | `number`                              | unset     | Primary pane's preferred share in split mode, in (0, 1). See below.        |
 | `...ViewProps` | `ViewProps`                           |           | Forwarded to the container view.                                           |
 
 `FoldableLayout.Primary` and `FoldableLayout.Secondary` are slot markers: they render no view of
@@ -64,6 +65,11 @@ Hiding a pane never unmounts its React tree, so component state survives posture
 
 For floating controls in overlay mode, give the primary root a transparent background and
 `pointerEvents="box-none"` so touches reach the secondary pane through empty areas.
+
+`splitRatio` gives the primary pane a preferred share of the layout in split mode, and the secondary
+pane fills the rest. The system may override it: on iPhone Duo the split follows the fold when half
+open, so the ratio only applies when the device is flat. Values outside (0, 1) are ignored with a dev
+warning. It is ignored in overlay mode and in fallbacks.
 
 Each slot accepts an optional `overlayEdge` (`'leading' | 'trailing'`). In overlay mode the system
 may turn the overlay into a side-by-side layout (for example when a foldable is unfolded);
@@ -122,6 +128,34 @@ Values are compared with `Object.is` by default. If the selector returns a new o
 comparison as the second argument. Inline selectors are fine. Throws if called outside a layout
 pane.
 
+### `useArrangement()` / `useArrangementSelector(selector, isEqual?)`
+
+Returns how the system actually arranged the panes, measured natively, and re-renders when it
+changes:
+
+```ts
+interface Arrangement {
+  kind: 'unknown' | 'single' | 'sideBySide' | 'stacked' | 'layered';
+  size: { width: number; height: number } | null;
+  primary: { visible: boolean; frame: Rect | null };
+  secondary: { visible: boolean; frame: Rect | null };
+}
+```
+
+Frames are in the layout's coordinate space; a hidden pane has `frame: null`. `kind` comes from
+geometry alone, so an overlay that turned side by side reports `sideBySide`, like a split. Use the
+selector form to re-render only for what you read:
+
+```tsx
+function DetailHeader() {
+  const detailAlone = useArrangementSelector((a) => a.kind === 'single');
+  return detailAlone ? <BackButton /> : null;
+}
+```
+
+On platforms without a native layout the arrangement is `single` with only the primary visible.
+Throws if called outside a layout pane.
+
 ## Testing
 
 Components that call `useHinge` or `useHingeSelector` throw outside a layout pane. In unit tests,
@@ -137,7 +171,8 @@ render(
 );
 ```
 
-Re-render with a new `hinge` to simulate folding; subscribers update as they do on device. Omit it
+Pass `arrangement={createArrangement('sideBySide')}` to drive `useArrangement` (it defaults to
+`unknown`). Re-render with a new `hinge` to simulate folding; subscribers update as they do on device. Omit it
 (or pass `null`) for "no hinge". `createHingeState(input)` builds a `HingeState` from the same
 shorthand for testing listeners and selectors directly. Rendering `FoldableLayout` itself needs the
 native component and is not covered.

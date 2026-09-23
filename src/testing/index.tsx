@@ -1,8 +1,11 @@
 import { type ReactNode, useEffect, useState } from 'react';
+import { ArrangementStoreContext } from '../arrangement/context';
+import { UNRESOLVED_ARRANGEMENT } from '../arrangement/state';
+import { createArrangementStore } from '../arrangement/store';
 import { HingeStoreContext } from '../hinge/context';
 import { UNAVAILABLE_HINGE } from '../hinge/state';
 import { createHingeStore } from '../hinge/store';
-import type { FoldPosture, HingeState } from '../types';
+import type { Arrangement, ArrangementKind, FoldPosture, HingeState } from '../types';
 
 /**
  * A hinge for tests: a full `HingeState`, a `{ posture, angleDegrees }`
@@ -39,25 +42,76 @@ export function createHingeState(input?: HingeInput): HingeState {
   };
 }
 
+/**
+ * Builds a plausible `Arrangement` of the given kind for a layout of `size`:
+ * halves for `sideBySide` / `stacked`, full-size panes for `layered`, and the
+ * primary pane alone for `single`.
+ */
+export function createArrangement(
+  kind: ArrangementKind,
+  size: { width: number; height: number } = { width: 800, height: 500 },
+): Arrangement {
+  const { width, height } = size;
+  const full = { x: 0, y: 0, width, height };
+  const shown = (frame: typeof full) => ({ visible: true, frame });
+  const hidden = { visible: false, frame: null };
+  switch (kind) {
+    case 'unknown':
+      return UNRESOLVED_ARRANGEMENT;
+    case 'single':
+      return { kind, size, primary: shown(full), secondary: hidden };
+    case 'layered':
+      return { kind, size, primary: shown(full), secondary: shown(full) };
+    case 'sideBySide':
+      return {
+        kind,
+        size,
+        primary: shown({ x: 0, y: 0, width: width / 2, height }),
+        secondary: shown({ x: width / 2, y: 0, width: width / 2, height }),
+      };
+    case 'stacked':
+      return {
+        kind,
+        size,
+        primary: shown({ x: 0, y: 0, width, height: height / 2 }),
+        secondary: shown({ x: 0, y: height / 2, width, height: height / 2 }),
+      };
+  }
+}
+
 export interface HingeTestProviderProps {
   /** The hinge reported to `useHinge` / `useHingeSelector`. Defaults to no hinge. */
   hinge?: HingeInput;
+  /**
+   * The arrangement reported to `useArrangement` / `useArrangementSelector`.
+   * Defaults to `unknown` (not measured yet). See `createArrangement`.
+   */
+  arrangement?: Arrangement;
   children?: ReactNode;
 }
 
 /**
- * Provides a hinge to components that call `useHinge` or `useHingeSelector`,
- * without rendering a native `FoldableLayout`. Re-render with a new `hinge`
+ * Provides a hinge and an arrangement to components that call `useHinge`,
+ * `useHingeSelector`, `useArrangement` or `useArrangementSelector`, without
+ * rendering a native `FoldableLayout`. Re-render with a new `hinge`
  * to simulate folding; subscribers update exactly as they do on device.
  */
-export function HingeTestProvider({ hinge, children }: HingeTestProviderProps) {
+export function HingeTestProvider({ hinge, arrangement, children }: HingeTestProviderProps) {
   const [store] = useState(() => createHingeStore(createHingeState(hinge)));
+  const [arrangementStore] = useState(() =>
+    createArrangementStore(arrangement ?? UNRESOLVED_ARRANGEMENT),
+  );
 
-  // The store ignores publishes that do not change the hinge, so this is a
-  // no-op on re-renders with an equivalent value.
+  // The stores ignore publishes that do not change their value, so these are
+  // no-ops on re-renders with an equivalent value.
   useEffect(() => {
     store.publish(createHingeState(hinge));
+    arrangementStore.publish(arrangement ?? UNRESOLVED_ARRANGEMENT);
   });
 
-  return <HingeStoreContext value={store}>{children}</HingeStoreContext>;
+  return (
+    <HingeStoreContext value={store}>
+      <ArrangementStoreContext value={arrangementStore}>{children}</ArrangementStoreContext>
+    </HingeStoreContext>
+  );
 }

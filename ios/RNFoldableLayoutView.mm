@@ -106,7 +106,8 @@ static NSString *RNFoldableEdgeName(RNFoldableLayoutSecondaryOverlayEdge edge)
                   axis:RNFoldableAxisName(next.axis)
             trackHinge:next.trackHinge
     primaryOverlayEdge:RNFoldableEdgeName(next.primaryOverlayEdge)
-  secondaryOverlayEdge:RNFoldableEdgeName(next.secondaryOverlayEdge)];
+  secondaryOverlayEdge:RNFoldableEdgeName(next.secondaryOverlayEdge)
+            splitRatio:next.splitRatio];
   [super updateProps:props oldProps:oldProps];
 }
 
@@ -125,6 +126,39 @@ static NSString *RNFoldableEdgeName(RNFoldableLayoutSecondaryOverlayEdge edge)
       .available = static_cast<bool>(available),
       .angle = angle,
       .posture = std::string(posture.UTF8String),
+  });
+}
+
+- (void)layoutHost:(RNFoldableLayoutHost *)host
+    didUpdateArrangementWithSize:(CGSize)size
+                  primaryVisible:(BOOL)primaryVisible
+                    primaryFrame:(CGRect)primaryFrame
+                secondaryVisible:(BOOL)secondaryVisible
+                  secondaryFrame:(CGRect)secondaryFrame
+{
+  if (!_eventEmitter) {
+    return;
+  }
+  auto emitter = std::static_pointer_cast<const RNFoldableLayoutEventEmitter>(_eventEmitter);
+  emitter->onArrangementUpdate({
+      .width = size.width,
+      .height = size.height,
+      .primary =
+          {
+              .visible = static_cast<bool>(primaryVisible),
+              .x = primaryFrame.origin.x,
+              .y = primaryFrame.origin.y,
+              .width = primaryFrame.size.width,
+              .height = primaryFrame.size.height,
+          },
+      .secondary =
+          {
+              .visible = static_cast<bool>(secondaryVisible),
+              .x = secondaryFrame.origin.x,
+              .y = secondaryFrame.origin.y,
+              .width = secondaryFrame.size.width,
+              .height = secondaryFrame.size.height,
+          },
   });
 }
 

@@ -1,5 +1,19 @@
 # react-native-adaptive-layout
 
+## 0.4.0
+
+### Minor Changes
+
+- [#17](https://github.com/sambulosenda/react-native-foldable/pull/17) [`c5e2478`](https://github.com/sambulosenda/react-native-foldable/commit/c5e2478e847777300f33947227f1e165dc63441b) Thanks [@sambulosenda](https://github.com/sambulosenda)! - Add a `splitRatio` prop to `FoldableLayout`: the primary pane's preferred share of the layout in split mode, between 0 and 1. The system may override it; on iPhone Duo the split follows the fold when half open. Ignored in overlay mode and in fallbacks. Uses an iOS 27.1 beta API.
+
+- [#18](https://github.com/sambulosenda/react-native-foldable/pull/18) [`8b89e6a`](https://github.com/sambulosenda/react-native-foldable/commit/8b89e6a9e13718d25e0ddd9e810c4f277b29249b) Thanks [@sambulosenda](https://github.com/sambulosenda)! - Add `useArrangement()` and `useArrangementSelector()` to read how the system actually arranged the panes: which are visible, their frames, and whether they are `single`, `sideBySide`, `stacked` or `layered`. The testing entry gains an `arrangement` prop on `HingeTestProvider` and a `createArrangement()` helper.
+
+## 0.3.0
+
+### Minor Changes
+
+- [#14](https://github.com/sambulosenda/react-native-foldable/pull/14) [`7a6a2f7`](https://github.com/sambulosenda/react-native-foldable/commit/7a6a2f7f1292309ca307fee25f1630470a4477cb) Thanks [@sambulosenda](https://github.com/sambulosenda)! - Add a `react-native-adaptive-layout/testing` entry with `HingeTestProvider` and `createHingeState`, so components that use `useHinge` or `useHingeSelector` can be unit-tested without rendering a native `FoldableLayout`.
+
 ## 0.2.0
 
 ### Minor Changes

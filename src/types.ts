@@ -35,6 +35,40 @@ export type HingeListener = (hinge: HingeState) => void;
 
 export type HingeSelector<T> = (hinge: HingeState) => T;
 
+/** A rectangle in the coordinate space of the enclosing `FoldableLayout`. */
+export interface Rect {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+/**
+ * How the system arranged the panes, derived from their measured geometry:
+ * - `single`: one pane is shown, the other is hidden.
+ * - `sideBySide`: both shown, next to each other.
+ * - `stacked`: both shown, one above the other.
+ * - `layered`: both shown, overlapping (overlay mode).
+ * - `unknown`: not measured yet.
+ */
+export type ArrangementKind = 'unknown' | 'single' | 'sideBySide' | 'stacked' | 'layered';
+
+export interface PaneArrangement {
+  readonly visible: boolean;
+  /** Frame in layout coordinates, or `null` when hidden or not measured yet. */
+  readonly frame: Rect | null;
+}
+
+export interface Arrangement {
+  readonly kind: ArrangementKind;
+  /** Size of the layout, or `null` when not measured yet. */
+  readonly size: { readonly width: number; readonly height: number } | null;
+  readonly primary: PaneArrangement;
+  readonly secondary: PaneArrangement;
+}
+
+export type ArrangementSelector<T> = (arrangement: Arrangement) => T;
+
 export interface FoldableLayoutProps extends ViewProps {
   /**
    * Exactly one `FoldableLayout.Primary` and one `FoldableLayout.Secondary`,
@@ -51,6 +85,13 @@ export interface FoldableLayoutProps extends ViewProps {
    * @default true
    */
   trackHinge?: boolean;
+  /**
+   * Preferred share of the layout, between 0 and 1 exclusive, given to the
+   * primary pane in split mode. The secondary pane fills the rest. It is a
+   * preference: the system may adjust it. Ignored in overlay mode and in
+   * fallbacks. Unset lets the system choose.
+   */
+  splitRatio?: number;
 }
 
 /** A horizontal edge, resolved against the layout direction. */
