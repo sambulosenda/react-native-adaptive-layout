@@ -122,6 +122,34 @@ Values are compared with `Object.is` by default. If the selector returns a new o
 comparison as the second argument. Inline selectors are fine. Throws if called outside a layout
 pane.
 
+### `useArrangement()` / `useArrangementSelector(selector, isEqual?)`
+
+Returns how the system actually arranged the panes, measured natively, and re-renders when it
+changes:
+
+```ts
+interface Arrangement {
+  kind: 'unknown' | 'single' | 'sideBySide' | 'stacked' | 'layered';
+  size: { width: number; height: number } | null;
+  primary: { visible: boolean; frame: Rect | null };
+  secondary: { visible: boolean; frame: Rect | null };
+}
+```
+
+Frames are in the layout's coordinate space; a hidden pane has `frame: null`. `kind` comes from
+geometry alone, so an overlay that turned side by side reports `sideBySide`, like a split. Use the
+selector form to re-render only for what you read:
+
+```tsx
+function DetailHeader() {
+  const detailAlone = useArrangementSelector((a) => a.kind === 'single');
+  return detailAlone ? <BackButton /> : null;
+}
+```
+
+On platforms without a native layout the arrangement is `single` with only the primary visible.
+Throws if called outside a layout pane.
+
 ## Testing
 
 Components that call `useHinge` or `useHingeSelector` throw outside a layout pane. In unit tests,
@@ -137,7 +165,8 @@ render(
 );
 ```
 
-Re-render with a new `hinge` to simulate folding; subscribers update as they do on device. Omit it
+Pass `arrangement={createArrangement('sideBySide')}` to drive `useArrangement` (it defaults to
+`unknown`). Re-render with a new `hinge` to simulate folding; subscribers update as they do on device. Omit it
 (or pass `null`) for "no hinge". `createHingeState(input)` builds a `HingeState` from the same
 shorthand for testing listeners and selectors directly. Rendering `FoldableLayout` itself needs the
 native component and is not covered.

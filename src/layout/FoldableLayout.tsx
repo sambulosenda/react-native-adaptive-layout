@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { ArrangementStoreContext } from '../arrangement/context';
+import { FALLBACK_ARRANGEMENT } from '../arrangement/state';
+import { createArrangementStore } from '../arrangement/store';
 import { HingeStoreContext } from '../hinge/context';
 import { createHingeStore } from '../hinge/store';
 import type { FoldableLayoutProps } from '../types';
@@ -22,17 +25,20 @@ export function FoldableLayout({
   ...viewProps
 }: FoldableLayoutProps) {
   const [store] = useState(createHingeStore);
+  const [arrangementStore] = useState(() => createArrangementStore(FALLBACK_ARRANGEMENT));
   const { primary, secondary, issues } = resolveSlots(children);
   warnOnce(issues);
 
   return (
     <HingeStoreContext value={store}>
-      <View {...viewProps} style={[styles.container, style]}>
-        <View style={styles.pane}>{primary}</View>
-        <View style={styles.hidden} pointerEvents="none" accessibilityElementsHidden>
-          {secondary}
+      <ArrangementStoreContext value={arrangementStore}>
+        <View {...viewProps} style={[styles.container, style]}>
+          <View style={styles.pane}>{primary}</View>
+          <View style={styles.hidden} pointerEvents="none" accessibilityElementsHidden>
+            {secondary}
+          </View>
         </View>
-      </View>
+      </ArrangementStoreContext>
     </HingeStoreContext>
   );
 }

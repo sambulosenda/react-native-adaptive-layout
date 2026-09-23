@@ -49,6 +49,10 @@ coordinates. `RNFoldablePaneView.applyNativeFrame` sets the UIKit frame and writ
 comes from that state, so Yoga measures descendants against the real size, and
 `getContentOriginOffset` keeps hit-testing and `measureInWindow` accurate.
 
+**Arrangement up.** `PaneContainer.didMoveToWindow` (visibility: SwiftUI detaches hidden panes) and
+`layoutSubviews` (frame) → `RNFoldableLayoutHost.recordPane` → coalesced, de-duplicated
+`onArrangementUpdate` → `toArrangement` → arrangement store → `useArrangement` subscribers.
+
 **Hinge up.** `.onHingeChange` → `LayoutRoot.report` → host delegate →
 `RNFoldableLayoutView` → `onHingeUpdate` direct event → `toHingeState` → `HingeStore.publish` →
 subscribers re-render.
