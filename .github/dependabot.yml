@@ -3,9 +3,28 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule: { interval: weekly }
+    ignore:
+      # Pinned by the Expo SDK and the React Native release. They move together in a planned
+      # Expo SDK upgrade, never one at a time.
+      - dependency-name: react
+      - dependency-name: react-test-renderer
+      - dependency-name: react-native
+      - dependency-name: '@react-native/*'
+      - dependency-name: expo
+      - dependency-name: expo-*
+      - dependency-name: react-native-safe-area-context
+      # changesets/action stays on v1, which needs the Changesets 2.x CLI.
+      - dependency-name: '@changesets/*'
+        update-types: ['version-update:semver-major']
     groups:
+      # Majors come as separate PRs so one breaking tool can't block the rest.
       dev-dependencies:
         dependency-type: development
+        update-types: [minor, patch]
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly }
+    ignore:
+      # v2 needs the Changesets 3.x CLI; revisit with the CLI upgrade.
+      - dependency-name: changesets/action
+        update-types: ['version-update:semver-major']
