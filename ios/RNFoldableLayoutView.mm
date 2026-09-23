@@ -2,6 +2,8 @@
 #import "RNFoldablePaneView.h"
 #import "RNFoldable-Swift.h"
 
+#import <React/RCTAssert.h>
+
 #import <react/renderer/components/RNFoldableSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RNFoldableSpec/EventEmitters.h>
 #import <react/renderer/components/RNFoldableSpec/Props.h>
@@ -90,8 +92,14 @@ static NSString *RNFoldableEdgeName(RNFoldableLayoutSecondaryOverlayEdge edge)
   [self assignPanes];
 }
 
+// FoldableLayout always renders exactly two RNFoldablePane children, primary
+// first. Anything else would silently misassign slots, so fail loudly in debug.
 - (void)assignPanes
 {
+  RCTAssert(_panes.count <= 2, @"RNFoldableLayout expects at most 2 panes, got %lu", (unsigned long)_panes.count);
+  for (UIView *pane in _panes) {
+    RCTAssert([pane isKindOfClass:RNFoldablePaneView.class], @"RNFoldableLayout child is not a pane: %@", pane);
+  }
   UIView *primary = _panes.count > 0 ? _panes[0] : nil;
   UIView *secondary = _panes.count > 1 ? _panes[1] : nil;
   [_host setPrimary:primary secondary:secondary];
