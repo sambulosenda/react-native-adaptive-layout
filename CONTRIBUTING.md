@@ -49,6 +49,7 @@ Changing a codegen spec in `src/native` requires `yarn example prebuild` to rege
 1. Branch from `main`.
 2. Keep PRs focused. Refactors and behaviour changes go in separate PRs.
 3. Add or update tests for JS logic. Native changes must be verified in the example app; say how in the PR.
+   Before a release that touches native code, run [docs/release-qa.md](docs/release-qa.md).
 4. Add a changeset for anything user-facing: `yarn changeset`.
 5. Update docs (README, ADRs) in the same PR as the code they describe.
 
