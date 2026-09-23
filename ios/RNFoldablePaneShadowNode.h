@@ -21,17 +21,13 @@ using RNFoldablePaneShadowNodeBase = ConcreteViewShadowNode<
     ViewEventEmitter,
     RNFoldablePaneState>;
 
-/// A pane is a layout root: its size comes from native state, not from its
-/// Yoga parent, and its children are laid out relative to that size.
+/// A pane's size comes from native state (applied in `adopt`), not from its
+/// Yoga parent. It is deliberately *not* a `RootNodeKind`: React Native stops
+/// walking ancestors at root nodes when measuring, which would make
+/// `measureInWindow` / `measure` inside a pane ignore the layout's own offset.
 class RNFoldablePaneShadowNode final : public RNFoldablePaneShadowNodeBase {
  public:
   using RNFoldablePaneShadowNodeBase::RNFoldablePaneShadowNodeBase;
-
-  static ShadowNodeTraits BaseTraits() {
-    auto traits = RNFoldablePaneShadowNodeBase::BaseTraits();
-    traits.set(ShadowNodeTraits::Trait::RootNodeKind);
-    return traits;
-  }
 
   Point getContentOriginOffset(bool /*includeTransform*/) const override {
     return getStateData().origin;
