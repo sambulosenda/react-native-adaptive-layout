@@ -1,5 +1,11 @@
 # react-native-adaptive-layout
 
+## 0.4.1
+
+### Patch Changes
+
+- [#16](https://github.com/sambulosenda/react-native-foldable/pull/16) [`afe8e44`](https://github.com/sambulosenda/react-native-foldable/commit/afe8e448f39875dfa84a99296d50aeabbe7d7008) Thanks [@sambulosenda](https://github.com/sambulosenda)! - Fix `measureInWindow` and `measure` (`pageX` / `pageY`) for views inside a pane: they reported positions relative to the layout instead of the window, ignoring the layout's own offset on screen.
+
 ## 0.4.0
 
 ### Minor Changes
