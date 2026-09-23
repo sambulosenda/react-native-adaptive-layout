@@ -10,18 +10,24 @@ media layouts need an unequal split. iOS 27.1 adds `View.splitArrangementLayoutR
 per-pane modifier: the pane with the highest `layoutPriority` is sized first by its ratio, and the
 other pane fills the remainder.
 
-Observed on the iPhone Duo simulator (iOS 27.1), `axis="vertical"`, ratio on the primary only:
+Observed on the iPhone Duo simulator (iOS 27.1), ratio on the primary only. Sizes are the split
+dimension in points (height when stacked, width when side by side):
 
-| Posture              | Ratio | Primary | Secondary |
-| -------------------- | ----- | ------- | --------- |
-| Fully open (180°)    | unset | 334     | 334       |
-| Fully open (180°)    | 0.3   | 200     | 468       |
-| Fully open (180°)    | 0.5   | 334     | 334       |
-| Fully open (180°)    | 0.7   | 468     | 200       |
-| Partially open (88°) | any   | 224     | 404       |
+| Axis       | Posture              | Arrangement | Ratio | Primary | Secondary |
+| ---------- | -------------------- | ----------- | ----- | ------- | --------- |
+| `vertical` | Fully open (180°)    | stacked     | unset | 334     | 334       |
+| `vertical` | Fully open (180°)    | stacked     | 0.3   | 200     | 468       |
+| `vertical` | Fully open (180°)    | stacked     | 0.5   | 334     | 334       |
+| `vertical` | Fully open (180°)    | stacked     | 0.7   | 468     | 200       |
+| `vertical` | Partially open (88°) | stacked     | any   | 224     | 404       |
+| `any`      | Fully open (180°)    | sideBySide  | unset | 417     | 416       |
+| `any`      | Fully open (180°)    | sideBySide  | 0.3   | 250     | 583       |
+| `any`      | Fully open (180°)    | sideBySide  | 0.5   | 417     | 416       |
+| `any`      | Fully open (180°)    | sideBySide  | 0.7   | 583     | 250       |
 
-Half open, the split follows the fold and the ratio has no effect. The native log confirmed the
-ratio reached SwiftUI in every case. `axis="any"` was not measured.
+The ratio applies on whichever axis the system picks and does not change that choice. Half open,
+the split follows the fold and the ratio has no effect. The native log confirmed the ratio reached
+SwiftUI in every case.
 
 ## Decision
 
