@@ -65,9 +65,13 @@ private final class PaneContainer: UIView {
   @available(*, unavailable)
   required init?(coder: NSCoder) { fatalError("PaneContainer is code-only") }
 
+  /// A mode switch can re-parent the pane into a fresh container while this
+  /// one is still alive; only the current owner may report for the pane.
+  private var ownsPane: Bool { pane.superview === self }
+
   override func layoutSubviews() {
     super.layoutSubviews()
-    guard let host = model?.host else { return }
+    guard let host = model?.host, ownsPane else { return }
     let frame = convert(bounds, to: host)
     host.delegate?.layoutHost(host, didPlace: pane, frame: frame)
     host.recordPane(pane, visible: window != nil, frame: frame)
@@ -77,7 +81,7 @@ private final class PaneContainer: UIView {
   /// the last frame in place, so window attachment is the visibility signal.
   override func didMoveToWindow() {
     super.didMoveToWindow()
-    guard let host = model?.host else { return }
+    guard let host = model?.host, ownsPane else { return }
     host.recordPane(pane, visible: window != nil, frame: window != nil ? convert(bounds, to: host) : nil)
   }
 
