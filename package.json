@@ -30,6 +30,11 @@
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
+    "./testing": {
+      "react-native-adaptive-layout-source": "./src/testing/index.tsx",
+      "types": "./lib/typescript/src/testing/index.d.ts",
+      "default": "./lib/module/testing/index.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,

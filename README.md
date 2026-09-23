@@ -122,6 +122,32 @@ Values are compared with `Object.is` by default. If the selector returns a new o
 comparison as the second argument. Inline selectors are fine. Throws if called outside a layout
 pane.
 
+## Testing
+
+Components that call `useHinge` or `useHingeSelector` throw outside a layout pane. In unit tests,
+wrap them in `HingeTestProvider` from the `testing` entry instead of rendering a native layout:
+
+```tsx
+import { HingeTestProvider } from 'react-native-adaptive-layout/testing';
+
+render(
+  <HingeTestProvider hinge={{ posture: 'partiallyOpen', angleDegrees: 90 }}>
+    <Controls />
+  </HingeTestProvider>,
+);
+```
+
+Re-render with a new `hinge` to simulate folding; subscribers update as they do on device. Omit it
+(or pass `null`) for "no hinge". `createHingeState(input)` builds a `HingeState` from the same
+shorthand for testing listeners and selectors directly. Rendering `FoldableLayout` itself needs the
+native component and is not covered.
+
+The package ships ES modules. With Jest's React Native preset, add it to `transformIgnorePatterns`:
+
+```js
+transformIgnorePatterns: ['node_modules/(?!((jest-)?react-native|@react-native(-community)?|react-native-adaptive-layout)/)'],
+```
+
 ## Platform behaviour
 
 | Environment                 | Layout                                   | Hinge       |
