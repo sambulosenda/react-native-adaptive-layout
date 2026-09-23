@@ -84,7 +84,7 @@
     "@types/react-test-renderer": "^19.0.0",
     "@vitest/coverage-v8": "^5.0.1",
     "del-cli": "^7.0.0",
-    "lefthook": "^1.13.0",
+    "lefthook": "^2.1.14",
     "react": "19.2.3",
     "react-native": "0.86.3",
     "react-native-builder-bob": "^0.43.1",
