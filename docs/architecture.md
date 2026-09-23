@@ -46,9 +46,11 @@ SwiftUI then re-parents each `UIView` into a `PaneContainer`.
 
 **Geometry up.** When SwiftUI lays out a `PaneContainer`, it reports the container's frame in host
 coordinates. `RNFoldablePaneView.applyNativeFrame` sets the UIKit frame and writes a
-`RNFoldablePaneState` into the shadow tree. The pane's shadow node is a `RootNodeKind` whose size
-comes from that state, so Yoga measures descendants against the real size, and
-`getContentOriginOffset` keeps hit-testing and `measureInWindow` accurate.
+`RNFoldablePaneState` into the shadow tree. The pane's shadow node takes its size from that state
+(applied in `adopt`), so Yoga measures descendants against the real size, and
+`getContentOriginOffset` supplies the SwiftUI-assigned origin so `measure` / `measureInWindow`
+inside a pane are accurate. The pane must not be a `RootNodeKind`: React Native stops walking
+ancestors at root nodes when measuring, which drops the layout's own offset in the window.
 
 **Arrangement up.** `PaneContainer.didMoveToWindow` (visibility: SwiftUI detaches hidden panes) and
 `layoutSubviews` (frame) → `RNFoldableLayoutHost.recordPane` → coalesced, de-duplicated
