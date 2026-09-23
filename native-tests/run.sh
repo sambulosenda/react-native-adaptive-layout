@@ -25,8 +25,15 @@ if [[ "$simulator" != *-*-*-*-* ]]; then destination="platform=iOS Simulator,nam
 run() {
   echo "==> $1"
   shift
-  xcodebuild test -quiet -scheme RNFoldableNativeTests-Package -destination "$destination" \
-    -derivedDataPath .build/xcode "$@"
+  mkdir -p .build
+  local log=.build/test.log
+  # Full output goes to the log; the console shows test results and errors only.
+  if ! xcodebuild test -scheme RNFoldableNativeTests-Package -destination "$destination" \
+    -derivedDataPath .build/xcode "$@" >"$log" 2>&1; then
+    grep -E '✘|error:' "$log" || tail -40 "$log"
+    return 1
+  fi
+  grep -E '➜ Suite|Test run with' "$log"
 }
 
 run "Compact fallback build"
