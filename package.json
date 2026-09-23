@@ -86,7 +86,7 @@
     "del-cli": "^7.0.0",
     "lefthook": "^1.13.0",
     "react": "19.2.3",
-    "react-native": "0.86.3",
+    "react-native": "0.87.1",
     "react-native-builder-bob": "^0.43.1",
     "react-test-renderer": "19.2.3",
     "turbo": "^2.10.8",
