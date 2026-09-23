@@ -106,7 +106,8 @@ static NSString *RNFoldableEdgeName(RNFoldableLayoutSecondaryOverlayEdge edge)
                   axis:RNFoldableAxisName(next.axis)
             trackHinge:next.trackHinge
     primaryOverlayEdge:RNFoldableEdgeName(next.primaryOverlayEdge)
-  secondaryOverlayEdge:RNFoldableEdgeName(next.secondaryOverlayEdge)];
+  secondaryOverlayEdge:RNFoldableEdgeName(next.secondaryOverlayEdge)
+            splitRatio:next.splitRatio];
   [super updateProps:props oldProps:oldProps];
 }
 

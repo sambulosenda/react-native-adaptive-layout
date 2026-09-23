@@ -16,11 +16,14 @@ const MODES: readonly LayoutMode[] = ['split', 'overlay'];
 const AXES: readonly LayoutAxis[] = ['any', 'horizontal', 'vertical'];
 // 'auto' leaves the edge unset so the system chooses.
 const EDGES: readonly (OverlayEdge | 'auto')[] = ['auto', 'leading', 'trailing'];
+// 'auto' leaves splitRatio unset so the system chooses.
+const RATIOS: readonly (number | 'auto')[] = ['auto', 0.3, 0.5, 0.7];
 
 export default function App() {
   const [mode, setMode] = useState<LayoutMode>('split');
   const [axis, setAxis] = useState<LayoutAxis>('any');
   const [edge, setEdge] = useState<OverlayEdge | 'auto'>('auto');
+  const [ratio, setRatio] = useState<number | 'auto'>('auto');
 
   return (
     <SafeAreaProvider>
@@ -47,6 +50,19 @@ export default function App() {
                 onPress={() => setAxis(option)}
               />
             ))}
+            {mode === 'split' && (
+              <>
+                <View style={styles.divider} />
+                {RATIOS.map((option) => (
+                  <Chip
+                    key={option}
+                    label={String(option)}
+                    selected={option === ratio}
+                    onPress={() => setRatio(option)}
+                  />
+                ))}
+              </>
+            )}
             {mode === 'overlay' && (
               <>
                 <View style={styles.divider} />
@@ -64,7 +80,12 @@ export default function App() {
         </View>
 
         <View style={styles.stage}>
-          <FoldableLayout style={styles.layout} mode={mode} axis={axis}>
+          <FoldableLayout
+            style={styles.layout}
+            mode={mode}
+            axis={axis}
+            splitRatio={ratio === 'auto' ? undefined : ratio}
+          >
             <FoldableLayout.Primary overlayEdge={edge === 'auto' ? undefined : edge}>
               <Pane slot="primary" mode={mode} />
             </FoldableLayout.Primary>

@@ -83,6 +83,19 @@ export function resolveOverlayEdges(
   };
 }
 
+/** `0` tells native the ratio is unset. */
+export function resolveSplitRatio(ratio: number | undefined): {
+  value: number;
+  issues: string[];
+} {
+  if (ratio === undefined) return { value: 0, issues: [] };
+  if (Number.isFinite(ratio) && ratio > 0 && ratio < 1) return { value: ratio, issues: [] };
+  return {
+    value: 0,
+    issues: [`splitRatio must be between 0 and 1 exclusive; got ${ratio}. It is ignored.`],
+  };
+}
+
 function duplicate(slot: string): string {
   return `More than one FoldableLayout.${slot} was provided; only the first is rendered.`;
 }
