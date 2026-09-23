@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "paths": { "react-native-adaptive-layout": ["./src/index"] },
+    "paths": {
+      "react-native-adaptive-layout": ["./src/index"],
+      "react-native-adaptive-layout/testing": ["./src/testing/index"]
+    },
     "customConditions": ["react-native-adaptive-layout-source", "react-native-strict-api"],
     "allowImportingTsExtensions": true,
     "allowUnreachableCode": false,
