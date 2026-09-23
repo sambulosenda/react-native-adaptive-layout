@@ -1,6 +1,12 @@
 import { createElement, Fragment } from 'react';
 import { describe, expect, it } from 'vitest';
-import { Primary, resolveOverlayEdges, resolveSlots, Secondary } from '../src/layout/slots';
+import {
+  Primary,
+  resolveOverlayEdges,
+  resolveSlots,
+  resolveSplitRatio,
+  Secondary,
+} from '../src/layout/slots';
 
 describe('resolveSlots', () => {
   it('matches slots by identity regardless of order', () => {
@@ -98,4 +104,23 @@ describe('resolveOverlayEdges', () => {
     expect(result).toMatchObject({ primary: 'trailing', secondary: 'trailing' });
     expect(result.issues).toEqual([expect.stringContaining('overlap')]);
   });
+});
+
+describe('resolveSplitRatio', () => {
+  it('maps unset to 0 without warning', () => {
+    expect(resolveSplitRatio(undefined)).toEqual({ value: 0, issues: [] });
+  });
+
+  it('passes through ratios strictly between 0 and 1', () => {
+    expect(resolveSplitRatio(0.3)).toEqual({ value: 0.3, issues: [] });
+  });
+
+  it.each([0, 1, -0.2, 1.5, Number.NaN, Number.POSITIVE_INFINITY])(
+    'ignores %s with a warning',
+    (ratio) => {
+      const result = resolveSplitRatio(ratio);
+      expect(result.value).toBe(0);
+      expect(result.issues).toHaveLength(1);
+    },
+  );
 });

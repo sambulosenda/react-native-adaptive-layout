@@ -41,6 +41,8 @@ export interface NativeProps extends ViewProps {
   trackHinge?: CodegenTypes.WithDefault<boolean, true>;
   primaryOverlayEdge?: CodegenTypes.WithDefault<'none' | 'leading' | 'trailing', 'none'>;
   secondaryOverlayEdge?: CodegenTypes.WithDefault<'none' | 'leading' | 'trailing', 'none'>;
+  /** Primary pane share in split mode; 0 means unset. */
+  splitRatio?: CodegenTypes.WithDefault<CodegenTypes.Double, 0>;
   onHingeUpdate?: CodegenTypes.DirectEventHandler<HingeEvent>;
   onArrangementUpdate?: CodegenTypes.DirectEventHandler<ArrangementEvent>;
 }

@@ -10,7 +10,7 @@ import NativeFoldableLayout, { type NativeProps } from '../native/FoldableLayout
 import NativeFoldablePane from '../native/FoldablePaneNativeComponent';
 import type { FoldableLayoutProps } from '../types';
 import { warnOnce } from '../warn';
-import { Primary, resolveOverlayEdges, resolveSlots, Secondary } from './slots';
+import { Primary, resolveOverlayEdges, resolveSlots, resolveSplitRatio, Secondary } from './slots';
 
 type HingeUpdate = NonNullable<NativeProps['onHingeUpdate']>;
 type ArrangementUpdate = NonNullable<NativeProps['onArrangementUpdate']>;
@@ -24,6 +24,7 @@ export function FoldableLayout({
   mode = 'split',
   axis = 'any',
   trackHinge = true,
+  splitRatio,
   ...viewProps
 }: FoldableLayoutProps) {
   const [store] = useState(createHingeStore);
@@ -45,7 +46,8 @@ export function FoldableLayout({
 
   const { primary, secondary, issues } = resolveSlots(children);
   const edges = resolveOverlayEdges(primary?.props.overlayEdge, secondary?.props.overlayEdge);
-  warnOnce([...issues, ...edges.issues]);
+  const ratio = resolveSplitRatio(splitRatio);
+  warnOnce([...issues, ...edges.issues, ...ratio.issues]);
 
   // Native assigns panes by mount index: primary first, secondary second.
   return (
@@ -58,6 +60,7 @@ export function FoldableLayout({
           trackHinge={trackHinge}
           primaryOverlayEdge={edges.primary}
           secondaryOverlayEdge={edges.secondary}
+          splitRatio={ratio.value}
           onHingeUpdate={onHingeUpdate}
           onArrangementUpdate={onArrangementUpdate}
         >

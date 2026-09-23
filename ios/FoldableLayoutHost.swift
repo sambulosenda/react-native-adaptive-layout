@@ -40,6 +40,8 @@ private final class LayoutModel: ObservableObject {
   @Published var trackHinge = true
   @Published var primaryOverlayEdge: Edge = .none
   @Published var secondaryOverlayEdge: Edge = .none
+  /// Primary pane share in split mode; nil lets the system choose.
+  @Published var splitRatio: CGFloat?
   @Published var primary: UIView?
   @Published var secondary: UIView?
 
@@ -162,7 +164,12 @@ private struct LayoutRoot: View {
     @ViewBuilder private var arrangement: some View {
       switch model.mode {
       case .split:
-        ArrangementView { primary } secondary: { secondary }
+        // Only the primary carries a ratio; the secondary fills the remainder.
+        ArrangementView {
+          primary.splitArrangementLayoutRatio(model.splitRatio)
+        } secondary: {
+          secondary
+        }
           .arrangementViewStyle(.split.axes(model.axis.axisSet))
       case .overlay:
         ArrangementView {
@@ -311,7 +318,8 @@ private struct LayoutRoot: View {
     axis: String,
     trackHinge: Bool,
     primaryOverlayEdge: String,
-    secondaryOverlayEdge: String
+    secondaryOverlayEdge: String,
+    splitRatio: Double
   ) {
     let nextMode = LayoutModel.Mode(rawValue: mode) ?? .split
     let nextAxis = LayoutModel.Axis(rawValue: axis) ?? .any
@@ -321,6 +329,8 @@ private struct LayoutRoot: View {
     if model.axis != nextAxis { model.axis = nextAxis }
     if model.primaryOverlayEdge != nextPrimaryEdge { model.primaryOverlayEdge = nextPrimaryEdge }
     if model.secondaryOverlayEdge != nextSecondaryEdge { model.secondaryOverlayEdge = nextSecondaryEdge }
+    let nextRatio: CGFloat? = splitRatio > 0 && splitRatio < 1 ? CGFloat(splitRatio) : nil
+    if model.splitRatio != nextRatio { model.splitRatio = nextRatio }
     if model.trackHinge != trackHinge {
       model.trackHinge = trackHinge
       if !trackHinge {

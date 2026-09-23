@@ -85,6 +85,13 @@ export interface FoldableLayoutProps extends ViewProps {
    * @default true
    */
   trackHinge?: boolean;
+  /**
+   * Preferred share of the layout, between 0 and 1 exclusive, given to the
+   * primary pane in split mode. The secondary pane fills the rest. It is a
+   * preference: the system may adjust it. Ignored in overlay mode and in
+   * fallbacks. Unset lets the system choose.
+   */
+  splitRatio?: number;
 }
 
 /** A horizontal edge, resolved against the layout direction. */

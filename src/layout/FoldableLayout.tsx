@@ -21,6 +21,7 @@ export function FoldableLayout({
   mode: _mode,
   axis: _axis,
   trackHinge: _trackHinge,
+  splitRatio: _splitRatio,
   style,
   ...viewProps
 }: FoldableLayoutProps) {

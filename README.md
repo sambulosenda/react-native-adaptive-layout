@@ -56,6 +56,7 @@ function Controls() {
 | `mode`         | `'split' \| 'overlay'`                | `'split'` | In overlay the primary pane floats above the secondary.                    |
 | `axis`         | `'any' \| 'horizontal' \| 'vertical'` | `'any'`   | Restricts which axis the system may split on. It never forces a split.     |
 | `trackHinge`   | `boolean`                             | `true`    | Gate hinge events for `useHinge` inside this layout. Layout is unaffected. |
+| `splitRatio`   | `number`                              | unset     | Primary pane's preferred share in split mode, in (0, 1). See below.        |
 | `...ViewProps` | `ViewProps`                           |           | Forwarded to the container view.                                           |
 
 `FoldableLayout.Primary` and `FoldableLayout.Secondary` are slot markers: they render no view of
@@ -64,6 +65,11 @@ Hiding a pane never unmounts its React tree, so component state survives posture
 
 For floating controls in overlay mode, give the primary root a transparent background and
 `pointerEvents="box-none"` so touches reach the secondary pane through empty areas.
+
+`splitRatio` gives the primary pane a preferred share of the layout in split mode, and the secondary
+pane fills the rest. The system may override it: on iPhone Duo the split follows the fold when half
+open, so the ratio only applies when the device is flat. Values outside (0, 1) are ignored with a dev
+warning. It is ignored in overlay mode and in fallbacks.
 
 Each slot accepts an optional `overlayEdge` (`'leading' | 'trailing'`). In overlay mode the system
 may turn the overlay into a side-by-side layout (for example when a foldable is unfolded);
