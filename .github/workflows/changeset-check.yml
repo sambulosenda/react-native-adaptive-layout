@@ -6,7 +6,10 @@ on:
 
 jobs:
   check:
-    if: "!contains(github.event.pull_request.labels.*.name, 'skip-changeset')"
+    # Dependabot only bumps dev tooling, which never needs a release note.
+    if: >-
+      !contains(github.event.pull_request.labels.*.name, 'skip-changeset') &&
+      github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
