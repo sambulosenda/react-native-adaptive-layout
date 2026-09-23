@@ -62,6 +62,7 @@
     "lint:fix": "biome check --write .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:native": "native-tests/run.sh",
     "example": "yarn workspace react-native-adaptive-layout-example",
     "changeset": "changeset",
     "version": "changeset version",

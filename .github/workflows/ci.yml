@@ -21,6 +21,17 @@ jobs:
       - run: yarn test --coverage
       - run: yarn build
 
+  native:
+    name: Native tests (iOS)
+    # Tests ios/FoldableLayoutHost.swift in isolation (native-tests/). The 27.0 SDK on this
+    # image covers the compact fallback; the adaptive tree needs SDK 27.1 and runs locally.
+    runs-on: xcode-27
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - run: sudo xcode-select -s /Applications/Xcode.app && xcodebuild -version
+      - run: native-tests/run.sh
+
   ios:
     name: Build example (iOS)
     # React Native 0.86 needs Xcode 27. GitHub ships it on the `xcode-27` preview

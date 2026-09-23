@@ -87,6 +87,16 @@ private final class PaneContainer: UIView {
     host.recordPane(pane, visible: window != nil, frame: window != nil ? convert(bounds, to: host) : nil)
   }
 
+  /// Called when SwiftUI removes the slot. The pane is detached first, so the
+  /// container leaving the window afterwards can no longer report it hidden;
+  /// report here instead. A container that already lost the pane to a fresh one
+  /// stays silent.
+  func release() {
+    guard ownsPane else { return }
+    pane.removeFromSuperview()
+    if let host = model?.host { host.recordPane(pane, visible: false, frame: nil) }
+  }
+
   /// The container itself is never a hit target; touches fall through to React
   /// content or, in overlay mode, to the pane underneath.
   override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -103,6 +113,8 @@ private struct PaneSlot: UIViewRepresentable {
     PaneContainer(pane: pane, model: model)
   }
 
+  // `pane` is fixed per container: FoldableLayout always mounts the same two pane
+  // views, so a slot never needs to swap the view it adopted.
   func updateUIView(_ container: PaneContainer, context: Context) {
     container.setNeedsLayout()
   }
@@ -112,10 +124,7 @@ private struct PaneSlot: UIViewRepresentable {
   }
 
   static func dismantleUIView(_ container: PaneContainer, coordinator: ()) {
-    // A mode switch may have re-parented the pane into a fresh container already.
-    if container.pane.superview === container {
-      container.pane.removeFromSuperview()
-    }
+    container.release()
   }
 }
 
