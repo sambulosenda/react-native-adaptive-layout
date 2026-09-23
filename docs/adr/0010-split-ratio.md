@@ -42,8 +42,10 @@ ADR 0005: relationships between panes are layout props; constraints on one pane 
 `splitArrangementLayoutSize`) are slot props. A layout prop also rules out conflicting ratios on
 both panes, which SwiftUI would resolve by `layoutPriority`, a value apps cannot see.
 
-Jetpack WindowManager's `SplitAttributes.SplitType.ratio(x)` is also the primary's share, so the
-prop maps directly to Android.
+The semantics carry to Android: the planned `ViewGroup` (docs/roadmap.md) sizes the primary pane by
+the ratio when flat and follows the folding feature otherwise, matching iOS. (Jetpack's
+`SplitAttributes.SplitType.ratio` uses the same "primary share" convention, but it belongs to Activity
+Embedding and does not apply to views.)
 
 ## Consequences
 
