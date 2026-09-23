@@ -20,14 +20,15 @@ Every step also checks: no redbox, no `RCTAssert` failure, no Xcode runtime warn
 
 ## 2. Split mode
 
-| Posture        | `splitRatio` | Expect                                        |
-| -------------- | ------------ | --------------------------------------------- |
-| fully open     | auto         | System-chosen split                           |
-| fully open     | 0.3/0.5/0.7  | Primary size in the example matches the ratio |
-| partially open | any          | Split follows the fold; the ratio is ignored  |
-| closed         | any          | Single pane                                   |
+| Posture        | `splitRatio` | Expect                                                          |
+| -------------- | ------------ | --------------------------------------------------------------- |
+| fully open     | auto         | System-chosen split                                             |
+| fully open     | 0.3/0.5/0.7  | Primary size in the example matches the ratio                   |
+| partially open | any          | Split follows the fold; the ratio is ignored                    |
+| closed         | any          | Cover screen; the system stacks the panes and the ratio applies |
 
-- [ ] `axis` `horizontal` / `vertical` never forces a split; it only restricts the axis.
+- [ ] `axis` `horizontal` / `vertical` never forces a split; it only restricts the axis. An axis the
+      posture cannot split on gives a single pane.
 - [ ] Size labels in each pane match the visible pane (Yoga got the native size).
 
 ## 3. Overlay mode
