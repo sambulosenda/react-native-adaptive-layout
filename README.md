@@ -2,6 +2,10 @@
 
 Adaptive split/overlay layouts and hinge-aware hooks for foldable devices in React Native.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/sambulosenda/react-native-adaptive-layout/main/docs/assets/playground.png" alt="Example app on the iPhone Duo simulator, half open at 128°: primary and secondary panes side by side around the hinge" width="640">
+</p>
+
 `FoldableLayout` hands two React subtrees to the platform's adaptive layout engine
 (SwiftUI arrangements on iOS 27.1+), which decides how to place them around the hinge.
 `useHinge` exposes the live hinge angle and posture to any component inside the layout.
