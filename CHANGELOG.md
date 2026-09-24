@@ -1,5 +1,11 @@
 # react-native-adaptive-layout
 
+## 0.4.2
+
+### Patch Changes
+
+- [#32](https://github.com/sambulosenda/react-native-adaptive-layout/pull/32) [`5f891ce`](https://github.com/sambulosenda/react-native-adaptive-layout/commit/5f891ce6560fd568e64ef1e8eee0ed3640a29952) Thanks [@sambulosenda](https://github.com/sambulosenda)! - iOS: on the pre-27.1 fallback, switching `mode` from `overlay` to `split` now reports the secondary pane as hidden. `useArrangement` previously kept reporting it visible (kind `overlay` instead of `single`).
+
 ## 0.4.1
 
 ### Patch Changes
