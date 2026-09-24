@@ -4,13 +4,13 @@
   "description": "Adaptive split/overlay layouts and hinge-aware hooks for foldable devices in React Native.",
   "license": "MIT",
   "author": "Sambulo Senda <sambulosendas@gmail.com> (https://github.com/sambulosenda)",
-  "homepage": "https://github.com/sambulosenda/react-native-foldable#readme",
+  "homepage": "https://github.com/sambulosenda/react-native-adaptive-layout#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sambulosenda/react-native-foldable.git"
+    "url": "git+https://github.com/sambulosenda/react-native-adaptive-layout.git"
   },
   "bugs": {
-    "url": "https://github.com/sambulosenda/react-native-foldable/issues"
+    "url": "https://github.com/sambulosenda/react-native-adaptive-layout/issues"
   },
   "keywords": [
     "react-native",
