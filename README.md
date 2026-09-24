@@ -1,6 +1,8 @@
 # react-native-adaptive-layout
 
 Adaptive split/overlay layouts and hinge-aware hooks for foldable devices in React Native.
+Built for the iPhone Duo: show two panes around the hinge when open, one on the cover screen when
+closed.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/sambulosenda/react-native-adaptive-layout/main/docs/assets/playground.png" alt="Example app on the iPhone Duo simulator, half open at 128°: primary and secondary panes side by side around the hinge" width="640">
@@ -12,8 +14,9 @@ Adaptive split/overlay layouts and hinge-aware hooks for foldable devices in Rea
 
 - **New Architecture only.** Fabric component with a custom shadow node; no bridge fallback.
 - **iOS today.** Android (Jetpack WindowManager) is next; see [docs/roadmap.md](docs/roadmap.md).
-- **Graceful everywhere else.** Older iOS and other platforms render a deterministic single-pane
-  fallback and report the hinge as unavailable. Your app never branches on platform.
+- **Graceful everywhere else.** Older iOS and other platforms render a deterministic fallback
+  (primary pane only; overlay layers the primary over the secondary on older iOS) and report the
+  hinge as unavailable. Your app never branches on platform.
 
 ## Install
 
@@ -29,6 +32,7 @@ supported.
 ## Usage
 
 ```tsx
+import { Text } from 'react-native';
 import { FoldableLayout, useHinge } from 'react-native-adaptive-layout';
 
 export function PlayerScreen() {
@@ -73,7 +77,8 @@ For floating controls in overlay mode, give the primary root a transparent backg
 `splitRatio` gives the primary pane a preferred share of the layout in split mode, and the secondary
 pane fills the rest. The system may override it: on iPhone Duo the split follows the fold when half
 open and ignores the ratio; fully open or closed (panes stacked on the cover screen), the ratio
-applies. Values outside (0, 1) are ignored with a dev warning. It is ignored in overlay mode and in fallbacks.
+applies. Values outside (0, 1) are ignored with a dev warning. It is ignored in overlay mode and in
+fallbacks.
 
 Each slot accepts an optional `overlayEdge` (`'leading' | 'trailing'`). In overlay mode the system
 may turn the overlay into a side-by-side layout (for example when a foldable is unfolded);
@@ -157,8 +162,8 @@ function DetailHeader() {
 }
 ```
 
-On platforms without a native layout the arrangement is `single` with only the primary visible.
-Throws if called outside a layout pane.
+In fallbacks the arrangement is `single` with only the primary visible, except overlay on older iOS,
+which reports `layered`. Throws if called outside a layout pane.
 
 ## Testing
 
@@ -166,7 +171,11 @@ Components that call `useHinge` or `useHingeSelector` throw outside a layout pan
 wrap them in `HingeTestProvider` from the `testing` entry instead of rendering a native layout:
 
 ```tsx
-import { HingeTestProvider } from 'react-native-adaptive-layout/testing';
+import {
+  createArrangement,
+  createHingeState,
+  HingeTestProvider,
+} from 'react-native-adaptive-layout/testing';
 
 render(
   <HingeTestProvider hinge={{ posture: 'partiallyOpen', angleDegrees: 90 }}>
@@ -175,11 +184,12 @@ render(
 );
 ```
 
+Re-render with a new `hinge` to simulate folding; subscribers update as they do on device. Omit
+`hinge` (or pass `null`) for "no hinge". `createHingeState(input)` builds a `HingeState` from the
+same shorthand for testing listeners and selectors directly.
+
 Pass `arrangement={createArrangement('sideBySide')}` to drive `useArrangement` (it defaults to
-`unknown`). Re-render with a new `hinge` to simulate folding; subscribers update as they do on device. Omit it
-(or pass `null`) for "no hinge". `createHingeState(input)` builds a `HingeState` from the same
-shorthand for testing listeners and selectors directly. Rendering `FoldableLayout` itself needs the
-native component and is not covered.
+`unknown`). Rendering `FoldableLayout` itself needs the native component and is not covered.
 
 The package ships ES modules. With Jest's React Native preset, add it to `transformIgnorePatterns`:
 
@@ -192,7 +202,7 @@ transformIgnorePatterns: ['node_modules/(?!((jest-)?react-native|@react-native(-
 | Environment                 | Layout                                   | Hinge       |
 | --------------------------- | ---------------------------------------- | ----------- |
 | iOS 27.1+ (Xcode 27.1+ SDK) | Native adaptive split / overlay          | Live        |
-| iOS < 27.1, or older SDK    | Primary only (split) / stacked (overlay) | Unavailable |
+| iOS < 27.1, or older SDK    | Primary only (split) / layered (overlay) | Unavailable |
 | Android, web                | Primary only, secondary mounted hidden   | Unavailable |
 
 ## Example app
