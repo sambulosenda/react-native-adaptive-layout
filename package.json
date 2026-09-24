@@ -1,6 +1,6 @@
 {
   "name": "react-native-adaptive-layout",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Adaptive split/overlay layouts and hinge-aware hooks for foldable devices in React Native.",
   "license": "MIT",
   "author": "Sambulo Senda <sambulosendas@gmail.com> (https://github.com/sambulosenda)",
