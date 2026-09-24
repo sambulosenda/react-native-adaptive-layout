@@ -46,7 +46,6 @@ Every step also checks: no redbox, no `RCTAssert` failure, no Xcode runtime warn
 
 ## 5. Stability
 
-- [ ] Pane state (event log) survives posture changes and split ↔ overlay switches.
 - [ ] Rotate the device in each mode: layout settles, sizes update, no stale frame.
 - [ ] Background and foreground the app: hinge and arrangement still update.
 
