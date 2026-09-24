@@ -11,8 +11,8 @@ Thanks for helping build react-native-adaptive-layout. This guide gets you from 
 ## Setup
 
 ```sh
-git clone https://github.com/sambulosenda/react-native-foldable
-cd react-native-foldable
+git clone https://github.com/sambulosenda/react-native-adaptive-layout
+cd react-native-adaptive-layout
 yarn                      # installs deps, builds lib, installs git hooks
 yarn example prebuild     # generates example/ios
 yarn example ios          # builds and launches on a simulator
