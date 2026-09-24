@@ -7,7 +7,7 @@ import {
   useHinge,
 } from 'react-native-adaptive-layout';
 import { HingeGauge } from './HingeGauge';
-import { palette, radius, space } from './theme';
+import { palette, space } from './theme';
 
 export interface PaneProps {
   slot: 'primary' | 'secondary';
@@ -59,20 +59,9 @@ export function Pane({ slot, mode }: PaneProps) {
       testID={`${slot}-pane`}
       onLayout={onLayout}
       pointerEvents={floating ? 'box-none' : 'auto'}
-      style={[
-        styles.pane,
-        floating ? styles.floating : { backgroundColor: theme.fill, borderColor: theme.accent },
-      ]}
+      style={[styles.pane, floating ? styles.floating : { backgroundColor: theme.fill }]}
     >
-      <View
-        style={[
-          styles.card,
-          floating && [
-            styles.cardFloating,
-            { backgroundColor: theme.fill, borderColor: theme.accent },
-          ],
-        ]}
-      >
+      <View style={[styles.card, floating && { backgroundColor: theme.fill }]}>
         <View style={styles.header}>
           <Text style={[styles.eyebrow, { color: theme.accent }]}>{slot.toUpperCase()} PANE</Text>
           <Text testID={`${slot}-size`} style={[styles.size, { color: theme.text }]}>
@@ -104,14 +93,12 @@ export function Pane({ slot, mode }: PaneProps) {
 }
 
 const styles = StyleSheet.create({
-  pane: { flex: 1, padding: space.lg, borderWidth: 1.5, borderRadius: radius.lg },
-  floating: { backgroundColor: 'transparent', borderWidth: 0, justifyContent: 'flex-end' },
+  pane: { flex: 1, padding: space.lg },
+  floating: { backgroundColor: 'transparent', justifyContent: 'flex-end' },
   card: {
     gap: space.lg,
-    borderRadius: radius.lg,
     padding: space.xl,
   },
-  cardFloating: { borderWidth: 1.5 },
   // Wraps so the size drops below the eyebrow in narrow panes instead of colliding.
   header: {
     flexDirection: 'row',

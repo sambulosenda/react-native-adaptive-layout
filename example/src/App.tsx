@@ -10,7 +10,7 @@ import {
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Chip } from './Chip';
 import { Pane } from './Pane';
-import { palette, radius, space } from './theme';
+import { palette, space } from './theme';
 
 const MODES: readonly LayoutMode[] = ['split', 'overlay'];
 const AXES: readonly LayoutAxis[] = ['any', 'horizontal', 'vertical'];
@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: space.lg,
     marginBottom: space.lg,
-    borderRadius: radius.lg,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: palette.line,
