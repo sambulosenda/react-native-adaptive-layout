@@ -80,7 +80,7 @@
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
     "@react-native/babel-preset": "0.86.2",
-    "@types/node": "^24",
+    "@types/node": "^26",
     "@types/react": "^19.2.0",
     "@types/react-test-renderer": "^19.0.0",
     "@vitest/coverage-v8": "^5.0.1",
