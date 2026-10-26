@@ -10,7 +10,7 @@
     "build:ios": "xcodebuild ONLY_ACTIVE_ARCH=YES -workspace ios/FoldableExample.xcworkspace -UseNewBuildSystem=YES -scheme FoldableExample -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -quiet"
   },
   "dependencies": {
-    "@expo/metro-runtime": "~57.0.16",
+    "@expo/metro-runtime": "~58.0.15",
     "expo": "~57.0.24",
     "expo-build-properties": "~57.0.21",
     "expo-status-bar": "~57.0.1",
